@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import BrandLogo from '@/public/assets/BrandLogo.png';
-export default function Footer() {
+export default function Footers() {
   return (
-    <footer className="py-8  bg-[#00122C] ">
+    <div className="py-8  bg-[#00122C] ">
       <div className="flex flex-col items-center">
         <div className="mb-6">
           <Image src={BrandLogo} alt="MoonX Logo" width={90} height={90} />
@@ -15,6 +15,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 }

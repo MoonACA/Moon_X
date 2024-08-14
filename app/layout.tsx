@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import './globals.css';
-import Footer from '@/components/Footer';
+import Footers from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Moon X',
@@ -17,7 +17,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-        <Footer />
+
+        <Footers />
       </body>
     </html>
   );
