@@ -9,8 +9,146 @@ import Ellipse2 from '@/public/assets/Ellipse2.png';
 import Ellipse3 from '@/public/assets/Ellipse3.png';
 import Image from 'next/image';
 import Link from 'next/link';
+import Card from './Card'
+
 
 export default function Hero() {
+
+  const courses = [
+    {
+      id: 1,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 2,
+      img: '/assets/moonxImg2.jpeg',
+      category: 'Finance and Digital Assets',
+      title: 'Decentralized Applications (dAPPs)',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 3,
+      img: '/assets/moonxImg3.jpeg',
+      category: 'Development and Programming',
+      title: 'Web3.js for Developers',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 4,
+      img: '/assets/moonxImg4.png',
+      category: 'Finance and Digital Assets',
+      title: 'DeFi (Decentralized Finance) Fundamentals',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 5,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 6,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 7,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 8,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 9,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 10,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 11,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+    {
+      id: 12,
+      img: '/assets/moonxImg1.png',
+      category: 'Blockchain',
+      title: 'Introduction to Blockchain Technology',
+      reward: 50,
+      description:
+        'Learn about the fundamentals of blockchain technology. Understand how it works, its history, and its potential applications across various industries. This course is perfect for beginners looking to grasp the basics',
+      rating: 4.9,
+      viewers: 100000,
+    },
+  ]
+
   return (
     <section className="relative  bg-[#00122C] md:pb-20 overflow-hidden">
       {/* Ellipse 1 */}
@@ -92,6 +230,14 @@ export default function Hero() {
             </div>
           </div>
         </div>
+      </div>
+      <h1 className='text-[2rem] text-[#fff] font-bold  mb-[2rem]'>
+        Courses
+      </h1>
+      <div className=' grid grid-cols-4 mx-auto gap-3 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 '>
+        {courses.map((course, index) => (
+          <Card course={course} key={index} />
+        ))}
       </div>
     </section>
   );
