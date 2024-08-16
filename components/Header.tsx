@@ -41,7 +41,7 @@ export default function Header() {
   ];
   return (
     <header className="sticky top-0 bg-[#00122C] z-50">
-      <div className="py-5">
+      <div className="w-[90%] md:w-[80%] mx-auto py-5">
         <div className="container py-2  mx-auto shadow-glow  rounded-full bg-gradient-to-r from-[#00122C] to-[#3c5983] ">
           <div className="flex px-7 items-center justify-between">
             <div className="flex text-white text-xl md:hidden">
@@ -54,14 +54,11 @@ export default function Header() {
               anchor="left"
               open={isDrawerOpen}
               onClose={handleDrawerClose}
-              PaperProps={{
-                sx: {
-                  width: 240,
-                  top: '10%',
-                  height: '50%',
-                  backgroundColor: 'white',
-                  color: 'black',
-                  boxShadow: 3,
+              sx={{
+                '& .MuiDrawer-paper': {
+                  width: '250px', // Change this value to adjust the width
+                  top: '11%',
+                  height: '50%', // Change this value to adjust the height
                 },
               }}
             >
