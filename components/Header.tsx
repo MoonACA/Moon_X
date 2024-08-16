@@ -21,8 +21,10 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import ConnectWalletModal from './ConnectWalletModal';
 export default function Header() {
   const router = useRouter();
+  const [isConnect, setIsConnect] = useState(false);
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -113,7 +115,7 @@ export default function Header() {
                 Home
               </a>
               <a
-                href="#"
+                href="/courses"
                 className="hover:text-[#FBB53C] hover:border-b-[4px] hover:border-[#FBB53C]"
               >
                 Course
@@ -131,11 +133,17 @@ export default function Header() {
                 About Us
               </a>
             </nav>
-            <button className="px-4 py-2 rounded items-center md:inline-flex justify-center bg-gradient-to-r from-[#EB7568] to-[#FBB83E] transition-opacity duration-0 hover:opacity-100 hidden">
+            <button
+              className="px-4 py-2 rounded items-center md:inline-flex justify-center bg-gradient-to-r from-[#EB7568] to-[#FBB83E] transition-opacity duration-0 hover:opacity-100 hidden"
+              onClick={() => setIsConnect(true)}
+            >
               Connect wallet
             </button>
             {/* mobile button */}
-            <button className=" rounded-full px-3 py-3 text-lg text-black bg-gradient-to-r from-[#EB7568] via-[#EB7568] to-[#FAB142] md:hidden">
+            <button
+              className=" rounded-full px-3 py-3 text-lg text-black bg-gradient-to-r from-[#EB7568] via-[#EB7568] to-[#FAB142] md:hidden"
+              onClick={() => setIsConnect(true)}
+            >
               <RiWallet3Line />
             </button>
           </div>
