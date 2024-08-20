@@ -4,8 +4,11 @@ import { IoIosArrowBack, IoIosClose } from 'react-icons/io';
 import { Dialog } from '@mui/material';
 import { CiWarning } from 'react-icons/ci';
 import { data } from '@/public/assets/data';
+<<<<<<< HEAD
 import Badge from '@/public/assets/Badge.png';
 import Image from 'next/image';
+=======
+>>>>>>> 790dac59192404d2cc4480fc2bbb1e290345e0ec
 
 // Define the type for the data structure
 type QuestionData = {
@@ -147,9 +150,6 @@ const CourseDialog: React.FC<CourseDialogProps> = ({ open, onClose }) => {
       >
         <div className="p-9">
           <div className="text-center text-black font-semibold text-base">
-            <div className="flex items-center justify-center mb-2">
-              <Image src={Badge} alt={'Badge'} />
-            </div>
             <h3 className="">Congratulations you passed</h3>
             <p>You have been rewarded with 10 mands</p>
           </div>

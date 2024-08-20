@@ -45,3 +45,26 @@ export const BtnPrimary: React.FC<Text> = ({ text }) => {
 		</div>
 	)
 }
+
+export const BtnSubmit: React.FC<Text> = ({ text }) => {
+	return (
+		<div>
+			<button
+				className=' text-center bg-[#FF6636] py-[0.5rem] px-[1rem] font-medium text-sm flex gap-2 items-center text-white'
+				type='submit'
+			>
+				{text}
+			</button>
+		</div>
+	)
+}
+
+export const BtnCancel: React.FC<Text> = ({ text }) => {
+	return (
+		<div>
+			<button className=' text-center bg-[#FFFFFF] py-[0.5rem] px-[1rem] font-medium text-sm flex gap-2 items-center text-[#6E7485]'>
+				{text}
+			</button>
+		</div>
+	)
+}

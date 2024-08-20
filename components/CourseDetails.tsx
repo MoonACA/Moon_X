@@ -11,23 +11,18 @@ import Image from 'next/image'
 import { FaPlay } from 'react-icons/fa'
 import Creators from './Creators'
 import Rating from './Rating'
+import GoBack from './GoBack'
 
 const CourseDetails = () => {
 	const router = useRouter()
 
 	return (
 		<div>
-			<div
-				className=' flex gap-2 items-center text-white font-medium cursor-pointer'
-				onClick={() => router.back()}
-			>
-				<IoMdArrowRoundBack />
-				Course details
-			</div>
+			<GoBack text='Course details' route='/courses' />
 			<div className=' p-[1rem] border border-white rounded-2xl mt-[1rem] bg-[#192A41]'>
 				<BreadCrumbs text='Development' />
 
-				<CourseTop />
+				<CourseTop text='Introduction to Blockchain Technology' />
 
 				<p className=' text-sm text-[#aaaaaa] max-sm:text-[0.8rem]'>
 					Learn about the fundamentals of blockchain technology. Understand how
