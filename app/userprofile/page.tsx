@@ -4,7 +4,6 @@ import { Avatar } from '@mui/material';
 import { IoCopy } from 'react-icons/io5';
 
 import React from 'react';
-
 import ProgressStreakTab from '@/components/usertabs/Progress';
 import ProfileSettings from '@/components/usertabs/Settings';
 import Notifications from '@/components/usertabs/Notification';
@@ -81,7 +80,20 @@ export default function UserProfile() {
         return null;
     }
   };
+  const [copySuccess, setCopySuccess] = useState('');
 
+  const handleCopy = () => {
+    const textToCopy = '000x1234567890';
+    navigator.clipboard.writeText(textToCopy).then(
+      () => {
+        setCopySuccess('Copied!');
+        setTimeout(() => setCopySuccess(''), 2000); // Reset after 2 seconds
+      },
+      () => {
+        setCopySuccess('Failed to copy');
+      }
+    );
+  };
   return (
     <div className=" bg-[#00122C] py-[10rem] ">
       <div className=" w-[80vw] mx-auto max-sm:w-[90vw]">
@@ -105,10 +117,23 @@ export default function UserProfile() {
                     <p className="text-white text-sm md:text-lg">Adam Trust</p>
                     <p className="text-white md:text-sm text-xs gap-2">
                       000x1234567890{' '}
-                      <span className="inline-flex text-blue-900">
+                      <span
+                        className="inline-flex mr-1"
+                        onClick={handleCopy}
+                        style={{ cursor: 'pointer' }}
+                      >
                         {' '}
-                        <IoCopy />{' '}
+                        <IoCopy
+                          style={{
+                            color: 'transparent', // Makes the inside of the icon transparent
+                            stroke: 'white', // Changes the outline color to white
+                            strokeWidth: '30',
+                          }}
+                        />{' '}
                       </span>
+                      {copySuccess && (
+                        <span className="ml-2">{copySuccess}</span>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -145,34 +170,7 @@ export default function UserProfile() {
                 </div>
               </div>
               <hr className="bg-white h-[2px] md:-ml-7 md:-mr-7 mt-1 mb-3 sm:mb-7" />
-<<<<<<< HEAD
               <ProfileCard />
-=======
-              <div className="mx-auto max-w-5xl mb-3 md:mb-7">
-                <div className="grid grid-cols-4 gap-2 md:gap-8">
-                  {/* small card */}
-                  <div className="rounded-xl py-2 px-2   md:px-4  md:py-6 bg-white text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Balance</p>
-                    <p className="text-sm md:text-2xl font-bold">124 Mand</p>
-                  </div>
-                  {/* small card */}
-                  <div className="rounded-xl  py-2 px-2   md:px-4  md:py-6 bg-white text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Daily Streak </p>
-                    <p className="text-sm  md:text-2xl font-bold">24</p>
-                  </div>
-                  {/* small card */}
-                  <div className="rounded-xl  py-2 px-2  md:px-4  md:py-6 bg-white text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Courses </p>
-                    <p className="text-sm  md:text-2xl font-bold">3</p>
-                  </div>
-                  {/* small card */}
-                  <div className="rounded-xl  py-2 px-2  md:px-4  md:py-6 bg-white text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Rank </p>
-                    <p className="text-sm  md:text-2xl font-bold">150</p>
-                  </div>
-                </div>
-              </div>
->>>>>>> 790dac59192404d2cc4480fc2bbb1e290345e0ec
             </div>
             {/* Profile tab  grid*/}
             <div className="mt-4">{renderContent()}</div>
