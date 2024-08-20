@@ -4,7 +4,11 @@ import React, { useState } from 'react'
 import { BtnPrimaryWhite } from './Btn'
 import ReviewModal from './ReviewModal'
 
-const CourseTop = () => {
+interface CourseTop {
+	text: string
+}
+
+const CourseTop: React.FC<CourseTop> = ({ text }) => {
 	const [isModal, setIsModal] = useState(false)
 
 	return (

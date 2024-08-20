@@ -8,7 +8,7 @@ export default function page() {
         <p className="text-lg text-[#fff]   mb-[2rem]">Rewards</p>
         <div className="grid justify-items-center  md:place-items-start gap-4 md:gap-0 grid-cols-1 md:grid-cols-4">
           {/* card */}
-          <div className="w-[15rem] py-[1rem] rounded-md flex items-center justify-center flex-col bg-gradient-to-br from-[#89BFDD] to-[#DFB1CC]">
+          <div className=" w-[80%] md:w-[15rem]  py-[1rem] rounded-md flex items-center justify-center flex-col bg-gradient-to-br from-[#89BFDD] to-[#DFB1CC]">
             <div className="">
               <Image src={coin} alt="coins" />
             </div>

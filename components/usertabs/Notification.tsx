@@ -55,8 +55,8 @@ const Notifications: React.FC<NotificationsProps> = ({
             <div className="mb-2">
               <span
                 className={`block w-2 h-2 sm:w-3 sm:h-3 ${
-                  notification.read ? 'bg-gray-400' : 'bg-[#F97316]'
-                }  rounded-full`}
+                  notification.read ? 'bg-gray-400' : 'bg-orange-600'
+                } border border-black rounded-full`}
               ></span>
             </div>
           </div>
