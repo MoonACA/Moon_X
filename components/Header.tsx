@@ -36,10 +36,11 @@ export default function Header() {
   const handleDrawerOpen = () => setIsDrawerOpen(true);
   const handleDrawerClose = () => setIsDrawerOpen(false);
   const navItems = [
-    { text: 'Home', Link: '/', icon: <FaHome /> },
+    { text: 'Home', Link: '', icon: <FaHome /> },
     { text: 'Course', Link: 'course', icon: <FaInfoCircle /> },
-    { text: 'Swap', Link: 'swap', icon: <FaCogs /> },
-    { text: 'About Us', Link: 'about', icon: <FaEnvelope /> },
+    { text: 'Swap', Link: 'admin', icon: <FaCogs /> },
+    { text: 'Profile', Link: 'userprofile', icon: <FaEnvelope /> },
+    { text: 'Reward', Link: 'reward', icon: <FaEnvelope /> },
   ];
   return (
     <header className="sticky top-0 bg-[#00122C] z-50">
@@ -65,7 +66,10 @@ export default function Header() {
               }}
             >
               <div className="flex justify-between items-center p-4">
-                <span className="text-lg font-bold">
+                <span
+                  className="text-lg font-bold"
+                  onClick={() => router.push('/')}
+                >
                   {' '}
                   <Image
                     src={BrandLogo}
@@ -73,7 +77,6 @@ export default function Header() {
                     height={20}
                     width={100}
                     className="cursor-pointer"
-                    onClick={() => router.push('/')}
                   />
                 </span>
                 <IconButton onClick={handleDrawerClose}>
@@ -99,14 +102,9 @@ export default function Header() {
                 ))}
               </List>
             </Drawer>
-
-            <Image
-              src={BrandLogo}
-              alt="moonx logo"
-              height={20}
-              width={100}
-              onClick={() => router.push('/')}
-            />
+            <span onClick={() => router.push('/')} className="cursor-pointer">
+              <Image src={BrandLogo} alt="moonx logo" height={20} width={100} />
+            </span>
             <nav className="md:flex gap-12 items-center font-bold text-white hidden">
               <a
                 href="#"

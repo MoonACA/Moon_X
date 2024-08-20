@@ -7,6 +7,7 @@ import React from 'react';
 import ProgressStreakTab from '@/components/usertabs/Progress';
 import ProfileSettings from '@/components/usertabs/Settings';
 import Notifications from '@/components/usertabs/Notification';
+import ProfileCard from '@/components/usertabs/Profilecard';
 
 export default function UserProfile() {
   const [notifications, setNotifications] = useState([
@@ -62,13 +63,12 @@ export default function UserProfile() {
       }))
     );
   };
-  const [activeTab, setActiveTab] = useState('Progress Streak');
+  const [activeTab, setActiveTab] = useState('Profile');
   const renderContent = () => {
     switch (activeTab) {
-      case 'Progress Streak':
+      case 'Profile':
         return <ProgressStreakTab />;
-      case 'Settings':
-        return <ProfileSettings />;
+
       case 'Notification':
         return (
           <Notifications
@@ -145,72 +145,34 @@ export default function UserProfile() {
               </div>
               {/* for tab */}
               <div className=" ">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <button
-                      onClick={() => setActiveTab('Progress Streak')}
-                      className={`px-3 text-sm md:text-base py-3 md:px-14 md:py-4 rounded-lg transition duration-500 ${
-                        activeTab === 'Progress Streak'
-                          ? 'bg-[#ffeecb] font-semibold text-black'
-                          : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black' //
-                      }`}
-                    >
-                      Progress Streak
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      className={`px-3 text-sm py-3 md:text-base md:px-14 md:py-4 text-white focus:text-black rounded-lg transition duration-500 ${
-                        activeTab === 'Settings'
-                          ? 'bg-[#ffeecb] font-semibold text-black   '
-                          : 'hover:bg-[#ffeecb] hover:font-semibold  hover:text-black'
-                      }`}
-                      onClick={() => setActiveTab('Settings')}
-                    >
-                      Setting
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      className={`px-3 text-sm md:text-base py-3 md:px-14 md:py-4 text-white focus:text-black rounded-lg transition duration-500 ${
-                        activeTab === 'Notification'
-                          ? 'bg-[#ffeecb] font-semibold text-black'
-                          : 'hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
-                      }`}
-                      onClick={() => setActiveTab('Notification')}
-                    >
-                      Notification
-                    </button>
-                  </div>
+                <div className="flex items-center gap-1 justify-between">
+                  <button
+                    onClick={() => setActiveTab('Profile')}
+                    className={`w-1/2 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500 ${
+                      activeTab === 'Profile'
+                        ? 'bg-[#FFEECB] font-semibold text-black'
+                        : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                    }`}
+                  >
+                    Profile
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('Notification')}
+                    className={`w-1/2 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500 ${
+                      activeTab === 'Notification'
+                        ? 'bg-[#FFEECB] font-semibold text-black'
+                        : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                    }`}
+                  >
+                    Notification
+                  </button>
                 </div>
               </div>
               <hr className="bg-white h-[2px] md:-ml-7 md:-mr-7 mt-1 mb-3 sm:mb-7" />
-              <div className="mx-auto max-w-5xl mb-3 md:mb-7">
-                <div className="grid grid-cols-4 gap-2 md:gap-8">
-                  {/* small card */}
-                  <div className="rounded-xl py-2 px-2   md:px-4  md:py-6 bg-[#FFEEE8] text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Balance</p>
-                    <p className="text-sm md:text-2xl font-bold">124 Mand</p>
-                  </div>
-                  {/* small card */}
-                  <div className="rounded-xl  py-2 px-2   md:px-4  md:py-6 bg-[#EBEBFF] text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Daily Streak </p>
-                    <p className="text-sm  md:text-2xl font-bold">24</p>
-                  </div>
-                  {/* small card */}
-                  <div className="rounded-xl  py-2 px-2  md:px-4  md:py-6 bg-[#E1F7E3] text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Courses </p>
-                    <p className="text-sm  md:text-2xl font-bold">3</p>
-                  </div>
-                  {/* small card */}
-                  <div className="rounded-xl  py-2 px-2  md:px-4  md:py-6 bg-white text-black text-center md:space-y-4">
-                    <p className="text-xs font-bold">Rank </p>
-                    <p className="text-sm  md:text-2xl font-bold">150</p>
-                  </div>
-                </div>
-              </div>
+              <ProfileCard />
             </div>
-            {/* progress streak tab  grid*/}
+            {/* Profile tab  grid*/}
             <div className="mt-4">{renderContent()}</div>
           </div>
         </div>

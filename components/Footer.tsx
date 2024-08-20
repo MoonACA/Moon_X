@@ -3,7 +3,7 @@ import Image from 'next/image';
 import BrandLogo from '@/public/assets/BrandLogo.png';
 export default function Footers() {
   return (
-    <div className="h-[264px] bg-[#010E21] flex flex-col items-center justify-between py-1">
+    <div className="h-[180px] bg-[#010E21] flex flex-col items-center justify-between py-1">
       <hr className="w-[90%] border-white h-[2px]" />
       {/* Image in the center */}
       <div className="flex-grow flex items-center justify-center">

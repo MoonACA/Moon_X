@@ -1,11 +1,16 @@
+'use client';
 import Image from 'next/image';
 import React from 'react';
 import logo from '@/public/assets/BrandLogo.png';
-
+import { useRouter } from 'next/navigation';
 const UserNav = () => {
+  const router = useRouter();
   return (
     <div>
-      <div className=" fixed flex w-[80vw] justify-between text-white mx-auto bg-[#192A41] border border-white left-0 right-0 p-[1rem] rounded-full items-center top-[2rem] z-[10]">
+      <div
+        onClick={() => router.push('/')}
+        className=" fixed flex w-[80vw] justify-between text-white mx-auto bg-[#192A41] border border-white left-0 right-0 p-[1rem] rounded-full items-center top-[2rem] z-[10] cursor-pointer"
+      >
         <Image
           src={logo}
           width={100}

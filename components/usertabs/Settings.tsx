@@ -14,7 +14,7 @@ const NotificationSetting: React.FC<NotificationSettingProps> = ({
   description,
   isChecked,
 }) => (
-  <div className="pt-5 flex md:grid md:grid-cols-2 items-center">
+  <div className=" pt-5 flex md:grid md:grid-cols-2 items-center">
     <div>
       <h3 className="text-white text-lg md:text-xl font-semibold">{title}</h3>
       <p className="text-gray-400 text-xs md:text-sm font-semibold">

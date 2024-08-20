@@ -1,11 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoIosArrowBack, IoIosClose } from 'react-icons/io';
 import { Dialog } from '@mui/material';
 import { CiWarning } from 'react-icons/ci';
 import { data } from '@/public/assets/data';
 import Badge from '@/public/assets/Badge.png';
 import Image from 'next/image';
+
 // Define the type for the data structure
 type QuestionData = {
   question: string;
@@ -19,15 +20,10 @@ type CourseDialogProps = {
 };
 
 const CourseDialog: React.FC<CourseDialogProps> = ({ open, onClose }) => {
-  // State to keep track of the current question index
   const [index, setIndex] = useState<number>(0);
-  // State to keep track of the current question
   const [question, setQuestion] = useState<QuestionData>(data[index]);
-  // State to store the selected answers
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  // State to handle completion modal
   const [completed, setCompleted] = useState<boolean>(false);
-  // State to handle the confirmation dialog
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
   const handleOptionClick = (optionIndex: number) => {
@@ -54,14 +50,15 @@ const CourseDialog: React.FC<CourseDialogProps> = ({ open, onClose }) => {
   const handleCloseAttempt = () => {
     setConfirmOpen(true);
   };
+
   const handlePrev = () => {
     if (index > 0) {
       setIndex(index - 1);
       setQuestion(data[index - 1]);
     }
   };
+
   const handleConfirmClose = () => {
-    // Here, you could save the user's progress if needed
     setConfirmOpen(false);
     onClose(); // Close the dialog and submit the progress
   };
@@ -69,6 +66,17 @@ const CourseDialog: React.FC<CourseDialogProps> = ({ open, onClose }) => {
   const handleCancelClose = () => {
     setConfirmOpen(false);
   };
+  const handleDoneClick = () => {
+    setCompleted(false); // Set completed to false
+    onClose(); // Close the dialog and submit the progress
+  };
+
+  // Automatically close the quiz modal when completed
+  useEffect(() => {
+    if (completed) {
+      onClose();
+    }
+  }, [completed, onClose]);
 
   return (
     <>
@@ -77,9 +85,9 @@ const CourseDialog: React.FC<CourseDialogProps> = ({ open, onClose }) => {
         onClose={handleCloseAttempt}
         PaperProps={{
           sx: {
-            width: { xs: '500px', md: '400px' }, // Adjust the width to make it more square-like
-            maxHeight: { xs: '600px', md: '600px' }, // Adjust the height
-            borderRadius: '16px', // Optional: round the corners
+            width: { xs: '500px', md: '400px' },
+            maxHeight: { xs: '600px', md: '600px' },
+            borderRadius: '16px',
           },
         }}
       >
@@ -154,7 +162,7 @@ const CourseDialog: React.FC<CourseDialogProps> = ({ open, onClose }) => {
             </button>
             <button
               className="py-2 rounded-lg px-8 text-white bg-gradient-to-r from-[#EB7568] via-[#FAB142] to-[#FAB142]"
-              onClick={onClose}
+              onClick={handleDoneClick}
             >
               Done
             </button>
