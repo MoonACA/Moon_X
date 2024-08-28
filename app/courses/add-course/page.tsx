@@ -1,12 +1,13 @@
-import AddCourse from '@/components/AddCourse'
-import React from 'react'
+'use client';
+import AddCourse from '@/components/AddCourse';
+import React from 'react';
 
 const Add = () => {
-	return (
-		<div>
-			<AddCourse />
-		</div>
-	)
-}
+  return (
+    <div>
+      <AddCourse />
+    </div>
+  );
+};
 
-export default Add
+export default Add;

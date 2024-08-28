@@ -43,7 +43,7 @@ export default function Header() {
     { text: 'Reward', Link: 'reward', icon: <FaEnvelope /> },
   ];
   return (
-    <header className="sticky top-0 bg-[#00122C] z-50">
+    <header className="sticky top-0 bg-[#00122C] z-50 backdrop-blur-sm">
       <div className="w-[90%] md:w-[80%] mx-auto py-5">
         <div className="container py-2  mx-auto shadow-glow  rounded-full bg-gradient-to-r from-[#00122C] to-[#3c5983] ">
           <div className="flex px-7 items-center justify-between">

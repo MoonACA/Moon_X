@@ -4,6 +4,7 @@ import '../globals.css';
 import UserNav from '@/components/courses/UserNav';
 import SideBar from '@/components/courses/SideBar';
 import Footers from '@/components/Footer';
+import BottomNavBar from '@/components/courses/BottomNav';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,6 +22,7 @@ export default function RootLayout({
         <SideBar />
         <UserNav />
         {children}
+        <BottomNavBar />
         <Footers />
       </body>
     </html>
