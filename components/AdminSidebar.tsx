@@ -23,7 +23,7 @@ const SideBar = () => {
 
   return (
     <div className=" flex items-center h-[100vh] fixed left-0 max-md:hidden">
-      <div className="  text-white flex flex-col justify-between h-[60vh] top-0">
+      <div className=" text-white flex flex-col  justify-between h-[60vh] top-0">
         {navData.map((list, index) => (
           <Link href={list.link} className="" key={index}>
             <div

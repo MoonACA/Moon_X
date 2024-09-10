@@ -1,9 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BrandLogo from '@/public/assets/BrandLogo.png';
 import Image from 'next/image';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { RiWallet3Line } from 'react-icons/ri';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 import {
   FaHome,
   FaInfoCircle,
@@ -25,6 +27,7 @@ import ConnectWalletModal from './ConnectWalletModal';
 export default function Header() {
   const router = useRouter();
   const [isConnect, setIsConnect] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -42,6 +45,24 @@ export default function Header() {
     { text: 'Profile', Link: 'userprofile', icon: <FaEnvelope /> },
     { text: 'Reward', Link: 'reward', icon: <FaEnvelope /> },
   ];
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setIsConnect(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isConnect) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isConnect]);
+
   return (
     <header className="sticky top-0 bg-[#00122C] z-50 backdrop-blur-sm">
       <div className="w-[90%] md:w-[80%] mx-auto py-5">
@@ -131,22 +152,119 @@ export default function Header() {
                 About Us
               </a>
             </nav>
-            <button
-              className="px-4 py-2 rounded items-center md:inline-flex justify-center bg-gradient-to-r from-[#EB7568] to-[#FBB83E] transition-opacity duration-0 hover:opacity-100 hidden"
-              onClick={() => setIsConnect(true)}
-            >
-              Connect wallet
-            </button>
-            {/* mobile button */}
-            <button
-              className=" rounded-full px-3 py-3 text-lg text-black bg-gradient-to-r from-[#EB7568] via-[#EB7568] to-[#FAB142] md:hidden"
-              onClick={() => setIsConnect(true)}
-            >
-              <RiWallet3Line />
-            </button>
+
+      
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                mounted,
+              }) => {
+                const ready = mounted;
+                const connected = ready && account && chain;
+
+                return (
+                  <div
+                    {...(!ready && {
+                      'aria-hidden': true,
+                      style: {
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                      },
+                    })}
+                  >
+                    {(() => {
+                      if (!connected) {
+                        return (
+                          <>
+                            {/* Button for desktop view */}
+                            <button
+                              onClick={openConnectModal}
+                              type="button"
+                              className="px-4 py-2 rounded items-center md:inline-flex justify-center bg-gradient-to-r from-[#EB7568] to-[#FBB83E] transition-opacity duration-0 hover:opacity-100 hidden"
+                            >
+                              Connect Wallet
+                            </button>
+
+                            {/* Button for mobile view */}
+                            <button
+                              onClick={openConnectModal}
+                              type="button"
+                              className="rounded-full px-3 py-3 text-lg text-black bg-gradient-to-r from-[#EB7568] via-[#EB7568] to-[#FAB142] md:hidden"
+                            >
+                              <RiWallet3Line />
+                            </button>
+                          </>
+                        );
+                      }
+
+                      if (chain.unsupported) {
+                        return (
+                          <button onClick={openChainModal} type="button">
+                            Wrong network
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <button
+                            onClick={openChainModal}
+                            style={{ display: 'flex', alignItems: 'center' }}
+                            type="button"
+                          >
+                            {chain.hasIcon && (
+                              <div
+                                style={{
+                                  background: chain.iconBackground,
+                                  width: 12,
+                                  height: 12,
+                                  borderRadius: 999,
+                                  overflow: 'hidden',
+                                  marginRight: 4,
+                                }}
+                              >
+                                {chain.iconUrl && (
+                                  <img
+                                    alt={chain.name ?? 'Chain icon'}
+                                    src={chain.iconUrl}
+                                    style={{ width: 12, height: 12 }}
+                                  />
+                                )}
+                              </div>
+                            )}
+                            {chain.name}
+                          </button>
+
+                          <button onClick={openAccountModal} type="button">
+                            {account.displayName}
+                            {account.displayBalance
+                              ? ` (${account.displayBalance})`
+                              : ''}
+                          </button>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
           </div>
         </div>
       </div>
+      {/* Modal */}
+      {isConnect && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+          ref={modalRef}
+        >
+          <ConnectWalletModal setIsConnect={setIsConnect} />
+        </div>
+      )}
     </header>
   );
 }

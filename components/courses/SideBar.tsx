@@ -30,7 +30,7 @@ const SideBar = () => {
       icon: <BiMedal />,
     },
     {
-      link: '/admin',
+      link: '/swap',
       text: 'Swap',
       icon: <BsDatabase />,
     },
@@ -47,7 +47,7 @@ const SideBar = () => {
         {navData.map((list, index) => (
           <Link href={list.link} className="" key={index}>
             <div
-              className={` bg-[#cfcfcf3b] rounded-r-full h-[4rem] flex items-center justify-center text-xl`}
+              className={` bg-[#cfcfcf3b] rounded-r-full h-[3rem] flex items-center justify-center text-xl`}
             >
               <div
                 className={` ${

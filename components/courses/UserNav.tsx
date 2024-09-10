@@ -3,6 +3,9 @@ import Image from 'next/image';
 import React from 'react';
 import logo from '@/public/assets/BrandLogo.png';
 import { useRouter } from 'next/navigation';
+import { Avatar } from '@mui/material';
+import { IoCopy } from 'react-icons/io5';
+import { IoMdArrowDropdown } from 'react-icons/io';
 const UserNav = () => {
   const router = useRouter();
   return (
@@ -35,7 +38,7 @@ const UserNav = () => {
     <header className="sticky top-0 bg-[#00122C] z-50 backdrop-blur-sm">
       <div className="w-[90%] md:w-[80%] mx-auto py-5">
         <div className="container py-2  mx-auto shadow-glow  border border-white rounded-full bg-[#192A41]">
-          <div className="flex px-7 items-center justify-between text-white">
+          <div className="flex px-6 items-center justify-between text-white">
             <div onClick={() => router.push('/')}>
               <Image
                 src={logo}
@@ -47,14 +50,28 @@ const UserNav = () => {
             </div>
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search here...."
               className="md:flex w-[30rem] border border-white bg-transparent rounded-lg p-[0.3rem] hidden"
             />
-
-            <div className="">
+            <div className="flex">
+              <Avatar>H</Avatar>
+              <div className="inline-flex mt-1">
+                <IoMdArrowDropdown style={{ width: 30, height: 30 }} />
+              </div>
+            </div>
+            <div className="bg-[#021128] px-2 flex">
               <p className=" bg-[#021128] rounded-lg p-[0.3rem] text-sm">
                 0xE....3412
               </p>
+              <div className="inline-flex mt-[6px]">
+                <IoCopy
+                  style={{
+                    color: 'transparent', // Makes the inside of the icon transparent
+                    stroke: 'white', // Changes the outline color to white
+                    strokeWidth: '30',
+                  }}
+                />
+              </div>
             </div>
 
             <div className="">

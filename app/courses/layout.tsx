@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className=" bg-[#00122C]">
         <SideBar />
         <UserNav />
-        <div className=" py-[10rem] w-[80vw] mx-auto max-sm:w-[90vw]">
+        <div className=" py-[5rem] w-[80vw] mx-auto max-sm:w-[90vw]">
           {children}
         </div>
         <BottomNavBar />
