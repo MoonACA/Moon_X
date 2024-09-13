@@ -18,9 +18,9 @@ const mande = {
 } as const satisfies Chain;
 
 const config = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
-  chains: [mainnet, mande],
+  appName: "moonx",
+  projectId: "b52456c0ffdabb5678905aae9f2aa217",
+  chains: [mande],
   ssr: true, // If your dApp uses server-side rendering (SSR)
 });
 export default function App({ children }: { children: ReactNode }) {
