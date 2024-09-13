@@ -25,7 +25,8 @@
     "react-quill": "^2.0.0",
     "react-star-ratings": "^2.3.0",
     "viem": "^2.21.3",
-    "wagmi": "^2.12.9"
+    "wagmi": "^2.12.9",
+    "web3": "^4.12.1"
   },
   "devDependencies": {
     "@types/node": "^20",
