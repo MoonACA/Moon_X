@@ -1,10 +1,10 @@
 import Web3 from 'web3';
 import { NextResponse } from 'next/server';
-import abi from '@/abi/credScoreContractAbi.json'; // Ensure this path is correct
+import abi from '@/abi/credScoreContractAbi.json';
 
 // Define the type for the request body
 type RequestBody = {
-  reputation_contract_address: string; // Fixed typo in variable name
+  reputation_contract_address: string;
   rpc_url: string;
   user_address: string;
 };
@@ -30,21 +30,21 @@ export async function POST(req: Request) {
     const credibility_contract_abi = abi.abi;
 
     // Create contract instance
-    const credibility_contract = new web3.eth.Contract(credibility_contract_abi, reputation_contract_address);
+    const reputation_contract = new web3.eth.Contract(credibility_contract_abi, reputation_contract_address);
 
     // Call contract method to get total reputation
-    const totalReputation = await credibility_contract.methods.totalReputation().call();
+    const totalReputation = await reputation_contract.methods.totalReputation().call();
     const totalReputationString = totalReputation ? totalReputation.toString() : '0';
 
     // Call contract method to get user's reputation
-    const credScore = await credibility_contract.methods.reputation(user_address).call();
-    const credScoreString = credScore ? credScore.toString() : '0';
+    const user_reputation= await reputation_contract.methods.reputation(user_address).call();
+    const user_reputation_String = user_reputation ? user_reputation.toString() : '0';
 
     // Return a JSON response with the results
     return NextResponse.json({
       status: "Success",
       totalReputation: totalReputationString, 
-      userReputation: credScoreString,
+      userReputation: user_reputation_String,
     });
     
   } catch (error: any) {
