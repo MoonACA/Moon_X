@@ -20,12 +20,9 @@ export async function POST(req: Request) {
                 .eq('address', user_address);
 
             if (data && data.length > 0) {
-                
-                await CreateUserData(user_address);
-
-                return { message: "User created", status: 200 };
+                return await UpdateUserSession(user_address);
             } else {
-                return { message: "User already exists", status: 200 };
+                return await CreateUserData(user_address);
             }
         } catch (error) {
             return { message: error || "Error during user lookup", status: 500 };
@@ -34,15 +31,16 @@ export async function POST(req: Request) {
 
     async function CreateUserData(user_address: string) {
 
-        // Generate UUID for user_id
-        const user_id = uuidv4();
-
-        // Properly concatenate "moonx_session" with the generated UUID
-        const session_id = `moonx_session_${user_id}`;
-
-        const status = "online";
-
         try {
+
+            // Generate UUID for user_id
+            const user_id = uuidv4();
+
+            // Properly concatenate "moonx_session" with the generated UUID
+            const session_id = `moonx_session_${user_id}`;
+
+            const status = "online";
+
             const { error } = await supabase
                 .from("users")
                 .insert({
@@ -52,11 +50,40 @@ export async function POST(req: Request) {
                     "status": status,
                 });
             if (error) {
-                return { message: "Error while creating account", status: 500 };
+                return { message: "Error while updating account", status: 500 };
+            }else{
+                return { message: "Account created", session_id: session_id,status: 500 }; 
             }
         } catch (error) {
             return { message: error || "Error during account creation", status: 500 };
         }
+    }
+
+    async function UpdateUserSession(user_address : string) {
+
+        try {
+
+            // Generate UUID for user_id
+            const user_id = uuidv4();
+
+            // Properly concatenate "moonx_session" with the generated UUID
+            const session_id = `moonx_session_${user_id}`;
+
+            const { data, error } = await supabase
+                .from('users')
+                .update({ status: "online", session_id: session_id })
+                .eq('address', user_address)
+                .select();
+            if(error){
+                return { message: "Address does not exist", status: 500 };
+            }else{
+                return { message: "Signed in", session_id: session_id, status: 200 };
+            }
+
+        } catch (error) {
+            return { message: error || "Address does not exist", status: 500 };
+        }
+
     }
 
     const run_functions = await CheckIfAddressExists(user_address);
