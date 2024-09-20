@@ -69,12 +69,12 @@ export async function POST(req: Request) {
       const user_reputation_String = user_reputation
         ? user_reputation.toString()
         : "0";
+      const cRED = parseFloat(user_reputation_String) / 100;
 
       return {
         message: "Reputation fetched",
         total_mande_reputation: totalReputationString,
-        user_mande_reputation: user_reputation_String,
-        status: 200,
+        user_mande_reputation: cRED,,
       };
     } catch (error) {
       return { message: error || "Error while fetching reputation", status: 500 };
