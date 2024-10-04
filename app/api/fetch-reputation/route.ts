@@ -1,7 +1,7 @@
-import Web3 from 'web3';
-import { NextResponse } from 'next/server';
-import supabase from '@/supabase';
-import abi from '@/abi/credScoreContractAbi.json';
+import Web3 from "web3";
+import { NextResponse } from "next/server";
+import supabase from "@/supabase";
+import abi from "@/abi/credScoreContractAbi.json";
 
 // Define the type for the request body
 type RequestBody = {
@@ -25,9 +25,9 @@ export async function POST(req: Request) {
   async function authBridge(session_id: any, user_address: any) {
     try {
       const { data } = await supabase
-        .from('users')
-        .select('*')
-        .eq('session_id', session_id);
+        .from("users")
+        .select("*")
+        .eq("session_id", session_id);
 
       if (data && data.length > 0) {
         return await fetchReputation(user_address);
@@ -74,10 +74,13 @@ export async function POST(req: Request) {
       return {
         message: "Reputation fetched",
         total_mande_reputation: totalReputationString,
-        user_mande_reputation: cRED,,
+        user_mande_reputation: cRED,
       };
     } catch (error) {
-      return { message: error || "Error while fetching reputation", status: 500 };
+      return {
+        message: error || "Error while fetching reputation",
+        status: 500,
+      };
     }
   }
 
@@ -85,7 +88,11 @@ export async function POST(req: Request) {
 
   // Return a response with the appropriate status code
   return NextResponse.json(
-    { message: run_functions.message, total_mande_reputation: run_functions.total_mande_reputation, user_mande_reputation: run_functions.user_mande_reputation },
+    {
+      message: run_functions.message,
+      total_mande_reputation: run_functions.total_mande_reputation,
+      user_mande_reputation: run_functions.user_mande_reputation,
+    },
     { status: run_functions.status }
   );
 }
