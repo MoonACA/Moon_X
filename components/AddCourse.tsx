@@ -1,20 +1,68 @@
-'use client';
-import React, { useState } from 'react';
-import { FaRegImage } from 'react-icons/fa6';
-import { MdOutlineFileUpload } from 'react-icons/md';
-import { BtnCancel, BtnSubmit } from './Btn';
-import QuizModal from './QuizModal';
-import dynamic from 'next/dynamic';
+"use client";
+import React, { FormEvent, useEffect, useState } from "react";
+import { FaRegImage } from "react-icons/fa6";
+import { MdOutlineFileUpload } from "react-icons/md";
+import { BtnCancel, BtnSubmit } from "./Btn";
+import QuizModal from "./QuizModal";
+import dynamic from "next/dynamic";
 
-import 'react-quill/dist/quill.snow.css';
-import ModuleModal from './ModuleModal';
+import "react-quill/dist/quill.snow.css";
+import ModuleModal from "./ModuleModal";
+import { title } from "process";
+import { MetadataType, uploadToIpfs } from "@/services/ipfs";
+import { createCourse } from "../services/moonXContract";
+import { useWriteContract } from "wagmi";
 
 // Dynamically import ReactQuill with SSR disabled
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const AddCourse = () => {
   const [addQuiz, setAddQuiz] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [isModuleAdd, setIsModuleAdd] = useState(false);
+  const [courseTitle, setCourseTitle] = useState("");
+  const [courseCategory, setCourseCategory] = useState("Blockchain");
+  const [courseTopic, setCourseTopic] = useState("Blockchain");
+  const [courseSubTitle, setCourseSubTitle] = useState("Blockchain");
+  const [courseDuration, setCourseDuration] = useState("30days");
+
+  const {
+    data: hash,
+    isPending,
+    isError,
+    isSuccess,
+    writeContract,
+  } = useWriteContract();
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // create new metadata
+    // upload metadata
+    // send create course transaction
+
+    const newMetadata: MetadataType = {
+      courseTitle,
+      courseSubTitle,
+      courseTopic,
+      courseCategory,
+      courseDuration,
+    };
+    // console.log(newMetadata);
+    const hash = await uploadToIpfs(newMetadata);
+    const metadataUri = `https://gateway.pinata.cloud/ipfs/${hash}`;
+
+    await createCourse(writeContract, { metadataUri });
+  }
+
+  useEffect(() => {
+    if (!isPending) {
+      if (isSuccess) {
+        console.log("Transaction sent succesfully", hash);
+      } else if (isError) {
+        console.log("Error sending transaction");
+      }
+    }
+  }, [isPending, isSuccess, isError, hash]);
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
@@ -28,7 +76,7 @@ const AddCourse = () => {
       )}
 
       <div className="">
-        <form action="" className="">
+        <form action="" onSubmit={(e) => handleSubmit(e)}>
           <div className=" grid grid-cols-3 gap-3 max-md:grid-cols-2">
             <div className=" flex flex-col gap-1">
               <label htmlFor="title" className=" text-sm text-white">
@@ -40,6 +88,7 @@ const AddCourse = () => {
                 name="title"
                 placeholder="Write course title"
                 className=" p-[0.5rem] rounded-lg border-none"
+                onChange={(e) => setCourseTitle(e.target.value)}
               />
             </div>
             <div className=" flex flex-col gap-1">
@@ -50,10 +99,12 @@ const AddCourse = () => {
                 name="category"
                 id="category"
                 className=" p-[0.5rem] rounded-lg border-none"
+                onChange={(e) => setCourseCategory(e.target.value)}
+                value={courseCategory}
               >
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
               </select>
             </div>
             <div className=" flex flex-col gap-1">
@@ -64,10 +115,12 @@ const AddCourse = () => {
                 name="topic"
                 id="topic"
                 className=" p-[0.5rem] rounded-lg border-none"
+                onChange={(e) => setCourseTopic(e.target.value)}
+                value={courseTopic}
               >
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
               </select>
             </div>
             <div className=" flex flex-col gap-1">
@@ -78,10 +131,12 @@ const AddCourse = () => {
                 name="subtitle"
                 id="subtitle"
                 className=" p-[0.5rem] rounded-lg border-none"
+                onChange={(e) => setCourseSubTitle(e.target.value)}
+                value={courseSubTitle}
               >
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Blockchain">Blockchain</option>
               </select>
             </div>
             <div className=" flex flex-col gap-1">
@@ -92,10 +147,12 @@ const AddCourse = () => {
                 name="duration"
                 id="duration"
                 className=" p-[0.5rem] rounded-lg border-none"
+                onChange={(e) => setCourseDuration(e.target.value)}
+                value={courseDuration}
               >
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
-                <option value="">Blockchain</option>
+                <option value="30days">30days</option>
+                <option value="60days">60days</option>
+                <option value="90days">90days</option>
               </select>
             </div>
           </div>
@@ -115,7 +172,7 @@ const AddCourse = () => {
               theme="snow"
               value={value}
               onChange={setValue}
-              style={{ color: '#fff', height: '10rem' }}
+              style={{ color: "#fff", height: "10rem" }}
             />
           </div>
 
@@ -159,7 +216,7 @@ const AddCourse = () => {
                 <div className=" bg-[#F5F7FA] p-[2rem] text-center">
                   <h3 className=" font-medium">Upload Notes</h3>
                   <p className=" text-[#8C94A3] text-sm">
-                    Drag an drop a file or{' '}
+                    Drag an drop a file or{" "}
                     <span className=" text-[#4E5566] cursor-pointer hover:underline">
                       browse file
                     </span>
@@ -182,7 +239,7 @@ const AddCourse = () => {
           </div>
 
           <div className=" flex items-center justify-between mt-[1rem]">
-            <BtnCancel text="Cancel" />
+            {/* <BtnCancel text="Cancel" /> */}
             <BtnSubmit text="Submit for Review" />
           </div>
         </form>
