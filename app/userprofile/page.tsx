@@ -1,13 +1,14 @@
-'use client';
-import { useState } from 'react';
-import { Avatar } from '@mui/material';
-import { IoCopy } from 'react-icons/io5';
+"use client";
+import { useState } from "react";
+import { Avatar } from "@mui/material";
+import { IoCopy } from "react-icons/io5";
 
-import React from 'react';
-import ProgressStreakTab from '@/components/usertabs/Progress';
-import ProfileSettings from '@/components/usertabs/Settings';
-import Notifications from '@/components/usertabs/Notification';
-import ProfileCard from '@/components/usertabs/Profilecard';
+import Link from "next/link";
+import React from "react";
+import ProgressStreakTab from "@/components/usertabs/Progress";
+import ProfileSettings from "@/components/usertabs/Settings";
+import Notifications from "@/components/usertabs/Notification";
+import ProfileCard from "@/components/usertabs/Profilecard";
 
 export default function UserProfile() {
   const [notifications, setNotifications] = useState([
@@ -15,42 +16,42 @@ export default function UserProfile() {
       id: 1,
       message:
         'New Course Alert: A new course you may like "Web3 Basics" is available now on the course page.',
-      time: '01:50pm',
+      time: "01:50pm",
       read: false,
     },
     {
       id: 2,
       message:
         'New Course Alert: A new course you may like "Web3 Basics" is available now on the course page.',
-      time: '01:50pm',
+      time: "01:50pm",
       read: false,
     },
     {
       id: 3,
       message:
         'New Course Alert: A new course you may like "Web3 Basics" is available now on the course page.',
-      time: '01:50pm',
+      time: "01:50pm",
       read: false,
     },
     {
       id: 4,
       message:
         'New Course Alert: A new course you may like "Web3 Basics" is available now on the course page.',
-      time: '01:50pm',
+      time: "01:50pm",
       read: false,
     },
     {
       id: 5,
       message:
         'New Course Alert: A new course you may like "Web3 Basics" is available now on the course page.',
-      time: '01:50pm',
+      time: "01:50pm",
       read: false,
     },
     {
       id: 6,
       message:
         'New Course Alert: A new course you may like "Web3 Basics" is available now on the course page.',
-      time: '01:50pm',
+      time: "01:50pm",
       read: false,
     },
   ]);
@@ -63,13 +64,13 @@ export default function UserProfile() {
       }))
     );
   };
-  const [activeTab, setActiveTab] = useState('Profile');
+  const [activeTab, setActiveTab] = useState("Profile");
   const renderContent = () => {
     switch (activeTab) {
-      case 'Profile':
+      case "Profile":
         return <ProgressStreakTab />;
 
-      case 'Notification':
+      case "Notification":
         return (
           <Notifications
             notifications={notifications}
@@ -80,17 +81,17 @@ export default function UserProfile() {
         return null;
     }
   };
-  const [copySuccess, setCopySuccess] = useState('');
+  const [copySuccess, setCopySuccess] = useState("");
 
   const handleCopy = () => {
-    const textToCopy = '000x1234567890';
+    const textToCopy = "000x1234567890";
     navigator.clipboard.writeText(textToCopy).then(
       () => {
-        setCopySuccess('Copied!');
-        setTimeout(() => setCopySuccess(''), 2000); // Reset after 2 seconds
+        setCopySuccess("Copied!");
+        setTimeout(() => setCopySuccess(""), 2000); // Reset after 2 seconds
       },
       () => {
-        setCopySuccess('Failed to copy');
+        setCopySuccess("Failed to copy");
       }
     );
   };
@@ -110,26 +111,26 @@ export default function UserProfile() {
                     sx={{
                       width: { xs: 40, sm: 56 }, // 40px width for mobile, 56px for larger screens
                       height: { xs: 40, sm: 56 }, // 40px height for mobile, 56px for larger screens
-                      border: '2px solid white', // 2px white border
+                      border: "2px solid white", // 2px white border
                     }}
                   />
                   <div className="mt-1">
                     <p className="text-white text-sm md:text-lg">Adam Trust</p>
                     <p className="text-white md:text-sm text-xs gap-2">
-                      000x1234567890{' '}
+                      000x1234567890{" "}
                       <span
                         className="inline-flex mr-1"
                         onClick={handleCopy}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                       >
-                        {' '}
+                        {" "}
                         <IoCopy
                           style={{
-                            color: 'transparent', // Makes the inside of the icon transparent
-                            stroke: 'white', // Changes the outline color to white
-                            strokeWidth: '30',
+                            color: "transparent", // Makes the inside of the icon transparent
+                            stroke: "white", // Changes the outline color to white
+                            strokeWidth: "30",
                           }}
-                        />{' '}
+                        />{" "}
                       </span>
                       {copySuccess && (
                         <span className="ml-2">{copySuccess}</span>
@@ -138,31 +139,33 @@ export default function UserProfile() {
                   </div>
                 </div>
                 <div>
-                  <button className="py-2 px-2 text-sm md:text-base md:py-3 md:px-3 text-white border border-1 border-white rounded-lg">
-                    Update Profile
-                  </button>
+                  <Link href={"/settings"}>
+                    <button className="py-2 px-2 text-sm md:text-base md:py-3 md:px-3 text-white border border-1 border-white rounded-lg">
+                      Edit Profile
+                    </button>
+                  </Link>
                 </div>
               </div>
               {/* for tab */}
               <div className=" ">
                 <div className="flex items-center gap-1 justify-between">
                   <button
-                    onClick={() => setActiveTab('Profile')}
+                    onClick={() => setActiveTab("Profile")}
                     className={`w-1/2 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500 ${
-                      activeTab === 'Profile'
-                        ? 'bg-[#FFEECB] font-semibold text-black'
-                        : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                      activeTab === "Profile"
+                        ? "bg-[#FFEECB] font-semibold text-black"
+                        : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                     }`}
                   >
                     Profile
                   </button>
 
                   <button
-                    onClick={() => setActiveTab('Notification')}
+                    onClick={() => setActiveTab("Notification")}
                     className={`w-1/2 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500 ${
-                      activeTab === 'Notification'
-                        ? 'bg-[#FFEECB] font-semibold text-black'
-                        : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                      activeTab === "Notification"
+                        ? "bg-[#FFEECB] font-semibold text-black"
+                        : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                     }`}
                   >
                     Notification
