@@ -6,6 +6,7 @@ export type MetadataType = {
   courseTopic: string;
   courseCategory: string;
   courseDuration: string;
+  courseDescription: string;
 };
 export async function uploadToIpfs(newMetadata: MetadataType) {
   try {

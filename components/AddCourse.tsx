@@ -19,7 +19,7 @@ const AddCourse = () => {
   const [addQuiz, setAddQuiz] = useState(false);
   const [value, setValue] = useState("");
   const [isModuleAdd, setIsModuleAdd] = useState(false);
-  const [courseTitle, setCourseTitle] = useState("");
+  const [courseTitle, setCourseTitle] = useState("Blockchain Development");
   const [courseCategory, setCourseCategory] = useState("Blockchain");
   const [courseTopic, setCourseTopic] = useState("Blockchain");
   const [courseSubTitle, setCourseSubTitle] = useState("Blockchain");
@@ -31,6 +31,7 @@ const AddCourse = () => {
     isError,
     isSuccess,
     writeContract,
+    error,
   } = useWriteContract();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -46,6 +47,7 @@ const AddCourse = () => {
       courseTopic,
       courseCategory,
       courseDuration,
+      courseDescription: value.replace("<p>", "").replace("</p>", ""),
     };
     // console.log(newMetadata);
     const hash = await uploadToIpfs(newMetadata);
@@ -59,10 +61,10 @@ const AddCourse = () => {
       if (isSuccess) {
         console.log("Transaction sent succesfully", hash);
       } else if (isError) {
-        console.log("Error sending transaction");
+        console.log("Error sending transaction", error);
       }
     }
-  }, [isPending, isSuccess, isError, hash]);
+  }, [isPending, isSuccess, isError, hash, error]);
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
@@ -88,6 +90,7 @@ const AddCourse = () => {
                 name="title"
                 placeholder="Write course title"
                 className=" p-[0.5rem] rounded-lg border-none"
+                value={courseTitle}
                 onChange={(e) => setCourseTitle(e.target.value)}
               />
             </div>
@@ -239,8 +242,8 @@ const AddCourse = () => {
           </div>
 
           <div className=" flex items-center justify-between mt-[1rem]">
-            {/* <BtnCancel text="Cancel" /> */}
-            <BtnSubmit text="Submit for Review" />
+            <BtnCancel text="Cancel" />
+            <BtnSubmit text={isPending ? "Loading..." : "Submit for Review"} />
           </div>
         </form>
       </div>
