@@ -157,7 +157,7 @@ export default function UserProfile() {
                         : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                     }`}
                   >
-                    Profile
+                    Enrolled Courses
                   </button>
 
                   <button
@@ -168,7 +168,7 @@ export default function UserProfile() {
                         : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                     }`}
                   >
-                    Notification
+                    My Courses
                   </button>
                 </div>
               </div>
