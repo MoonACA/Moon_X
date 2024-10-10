@@ -1,12 +1,22 @@
+"use client";
+import "@rainbow-me/rainbowkit/styles.css";
+import {
+  Chain,
+  getDefaultConfig,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
+import { mainnet } from "wagmi/chains";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import React, { ReactNode } from "react";
+import { WagmiProvider } from "wagmi";
 
-'use client';
-import '@rainbow-me/rainbowkit/styles.css';
-import { Chain, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { mainnet } from 'wagmi/chains';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import React, { ReactNode } from 'react';
-import { WagmiProvider } from 'wagmi';
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+    },
+  },
+});
 
 const mande = {
   id: 18071918,
@@ -27,7 +37,9 @@ export default function App({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact" initialChain={mande} >{children}</RainbowKitProvider>
+        <RainbowKitProvider modalSize="compact" initialChain={mande}>
+          {children}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

@@ -8,10 +8,10 @@ import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.snow.css";
 import ModuleModal from "./ModuleModal";
-import { title } from "process";
-import { MetadataType, uploadToIpfs } from "@/services/ipfs";
-import { createCourse } from "../services/moonXContract";
-import { useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
+import { Course } from "@/services/apiCourses";
+import { getUserByWalletAddress } from "@/services/apiUsers";
+import { useCreateCourse } from "@/hooks/course/useCreateCourse";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -19,52 +19,37 @@ const AddCourse = () => {
   const [addQuiz, setAddQuiz] = useState(false);
   const [value, setValue] = useState("");
   const [isModuleAdd, setIsModuleAdd] = useState(false);
-  const [courseTitle, setCourseTitle] = useState("Blockchain Development");
-  const [courseCategory, setCourseCategory] = useState("Blockchain");
-  const [courseTopic, setCourseTopic] = useState("Blockchain");
-  const [courseSubTitle, setCourseSubTitle] = useState("Blockchain");
-  const [courseDuration, setCourseDuration] = useState("30days");
+  const [courseTitle, setCourseTitle] = useState("");
+  // const [courseCategory, setCourseCategory] = useState("Blockchain");
+  // const [courseTopic, setCourseTopic] = useState("Blockchain");
+  // const [courseSubTitle, setCourseSubTitle] = useState("Blockchain");
+  // const [courseDuration, setCourseDuration] = useState("30days");
+  const [courseDescription, setCourseDescription] = useState("");
+  const [thumbnailFile, setThumbnailFile] = useState<File | string>();
+  const [videoFile, setVideoFile] = useState<File | string>();
 
-  const {
-    data: hash,
-    isPending,
-    isError,
-    isSuccess,
-    writeContract,
-    error,
-  } = useWriteContract();
+  const { address } = useAccount();
+
+  const { isCreating, createCourse } = useCreateCourse();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    // create new metadata
-    // upload metadata
-    // send create course transaction
-
-    const newMetadata: MetadataType = {
-      courseTitle,
-      courseSubTitle,
-      courseTopic,
-      courseCategory,
-      courseDuration,
-      courseDescription: value.replace("<p>", "").replace("</p>", ""),
+    if (!address) return console.log("wallet not connected");
+    const user = await getUserByWalletAddress(address);
+    if (!user) return;
+    if (!thumbnailFile || !videoFile)
+      return console.log("add a thumb nail and the course video");
+    const courseData: Course = {
+      title: courseTitle,
+      creatorId: user.id!,
+      thumbnail: thumbnailFile,
+      videoUrl: videoFile,
+      description: courseDescription,
+      fullText: value.replace("<p>", "").replace("</p>", ""),
     };
-    // console.log(newMetadata);
-    const hash = await uploadToIpfs(newMetadata);
-    const metadataUri = `https://gateway.pinata.cloud/ipfs/${hash}`;
-
-    await createCourse(writeContract, { metadataUri });
+    console.log(courseData);
+    createCourse(courseData);
   }
-
-  useEffect(() => {
-    if (!isPending) {
-      if (isSuccess) {
-        console.log("Transaction sent succesfully", hash);
-      } else if (isError) {
-        console.log("Error sending transaction", error);
-      }
-    }
-  }, [isPending, isSuccess, isError, hash, error]);
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
@@ -79,9 +64,9 @@ const AddCourse = () => {
 
       <div className="">
         <form action="" onSubmit={(e) => handleSubmit(e)}>
-          <div className=" grid grid-cols-3 gap-3 max-md:grid-cols-2">
-            <div className=" flex flex-col gap-1">
-              <label htmlFor="title" className=" text-sm text-white">
+          <div className="">
+            <div className="w-full">
+              <label htmlFor="title" className="block text-sm text-white mb-1">
                 Course Title
               </label>
               <input
@@ -89,12 +74,12 @@ const AddCourse = () => {
                 id="title"
                 name="title"
                 placeholder="Write course title"
-                className=" p-[0.5rem] rounded-lg border-none"
+                className="px-3 py-2 text-sm text-white bg-transparent border-[1px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6636] focus:ring-offset-2 focus:ring-offset-[#192A41] w-full md:w-[50%]"
                 value={courseTitle}
                 onChange={(e) => setCourseTitle(e.target.value)}
               />
             </div>
-            <div className=" flex flex-col gap-1">
+            {/* <div className=" flex flex-col gap-1">
               <label htmlFor="category" className=" text-sm text-white">
                 Course Category
               </label>
@@ -109,8 +94,8 @@ const AddCourse = () => {
                 <option value="Blockchain">Blockchain</option>
                 <option value="Blockchain">Blockchain</option>
               </select>
-            </div>
-            <div className=" flex flex-col gap-1">
+            </div> */}
+            {/* <div className=" flex flex-col gap-1">
               <label htmlFor="topic" className=" text-sm text-white">
                 Course Topic
               </label>
@@ -125,8 +110,8 @@ const AddCourse = () => {
                 <option value="Blockchain">Blockchain</option>
                 <option value="Blockchain">Blockchain</option>
               </select>
-            </div>
-            <div className=" flex flex-col gap-1">
+            </div> */}
+            {/* <div className=" flex flex-col gap-1">
               <label htmlFor="subtitle" className=" text-sm text-white">
                 Subtitle (Optional)
               </label>
@@ -141,8 +126,8 @@ const AddCourse = () => {
                 <option value="Blockchain">Blockchain</option>
                 <option value="Blockchain">Blockchain</option>
               </select>
-            </div>
-            <div className=" flex flex-col gap-1">
+            </div> */}
+            {/* <div className=" flex flex-col gap-1">
               <label htmlFor="duration" className=" text-sm text-white">
                 Course Duration
               </label>
@@ -157,22 +142,33 @@ const AddCourse = () => {
                 <option value="60days">60days</option>
                 <option value="90days">90days</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
-          <div
+          {/* <div
             className=" cursor-pointer bg-[#FFEECB] p-[0.5rem] w-[8rem] mt-[1rem] rounded-lg text-sm flex items-center justify-center font-medium"
             onClick={() => setIsModuleAdd(true)}
           >
             Add Modules
+          </div> */}
+          <div className="mt-5">
+            <label className="text-white block mb-1" htmlFor="description">
+              Description
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              className="px-3 py-2 text-sm text-white bg-transparent border-[1px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6636] focus:ring-offset-2 focus:ring-offset-[#192A41] w-full md:w-[50%] h-20"
+              onChange={(e) => setCourseDescription(e.target.value)}
+            />
           </div>
-
           <div className=" mt-[1rem] mb-[4rem] flex flex-col gap-2">
             <label htmlFor="" className=" text-white text-sm">
-              Course Description
+              Course lecture note
             </label>
             <ReactQuill
               theme="snow"
+              formats={["header", "font", "size", "bold", "italic", "color"]}
               value={value}
               onChange={setValue}
               style={{ color: "#fff", height: "10rem" }}
@@ -209,15 +205,16 @@ const AddCourse = () => {
               name="thumbnail"
               id="thumbnail"
               className=" hidden"
+              onChange={(e) => setThumbnailFile(e.target.files?.[0])}
             />
           </div>
 
           <div className="flex gap-5 items-center max-md:flex-col max-md:gap-2">
             <div className=" my-[1rem] w-[25rem] max-md:w-full">
               <label htmlFor="notes" className=" flex flex-col gap-2">
-                <p className=" text-sm text-white">Add Lecture Note</p>
+                <p className=" text-sm text-white">Course Video</p>
                 <div className=" bg-[#F5F7FA] p-[2rem] text-center">
-                  <h3 className=" font-medium">Upload Notes</h3>
+                  <h3 className=" font-medium">Upload Video</h3>
                   <p className=" text-[#8C94A3] text-sm">
                     Drag an drop a file or{" "}
                     <span className=" text-[#4E5566] cursor-pointer hover:underline">
@@ -226,7 +223,13 @@ const AddCourse = () => {
                   </p>
                 </div>
               </label>
-              <input type="file" name="notes" id="notes" className=" hidden" />
+              <input
+                type="file"
+                name="notes"
+                id="notes"
+                className=" hidden"
+                onChange={(e) => setVideoFile(e.target.files?.[0])}
+              />
             </div>
 
             <div className=" flex flex-col gap-2 w-[10rem] max-md:w-full">
@@ -243,7 +246,7 @@ const AddCourse = () => {
 
           <div className=" flex items-center justify-between mt-[1rem]">
             <BtnCancel text="Cancel" />
-            <BtnSubmit text={isPending ? "Loading..." : "Submit for Review"} />
+            <BtnSubmit text={isCreating ? "Loading..." : "Submit for Review"} />
           </div>
         </form>
       </div>
