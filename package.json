@@ -20,6 +20,7 @@
     "@tiptap/react": "^2.6.4",
     "@tiptap/starter-kit": "^2.6.4",
     "dompurify": "^3.1.7",
+    "ethers": "^6.13.4",
     "next": "14.2.5",
     "pino-pretty": "^11.2.2",
     "react": "^18",
