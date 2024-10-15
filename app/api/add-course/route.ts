@@ -91,7 +91,7 @@ async function authBridge(session_id: string, user_address: string) {
     }
   } catch (error) {
     return {
-      message: error.message || "Error authenticating user",
+      message: error || "Error authenticating user",
       status: 500,
     };
   }

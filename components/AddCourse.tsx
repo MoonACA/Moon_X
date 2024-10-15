@@ -45,7 +45,7 @@ const AddCourse = () => {
       thumbnail: thumbnailFile,
       videoUrl: videoFile,
       description: courseDescription,
-      fullText: value.replace("<p>", "").replace("</p>", ""),
+      fullText: value,
     };
     console.log(courseData);
     createCourse(courseData);
