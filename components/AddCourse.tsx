@@ -10,8 +10,9 @@ import "react-quill/dist/quill.snow.css";
 import ModuleModal from "./ModuleModal";
 import { useAccount } from "wagmi";
 import { Course } from "@/services/apiCourses";
-import { getUserByWalletAddress } from "@/services/apiUsers";
+import { createGetUser, getUserByWalletAddress } from "@/services/apiUsers";
 import { useCreateCourse } from "@/hooks/course/useCreateCourse";
+import useDeleteCourse from "@/hooks/course/useDeleteCourse";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -20,22 +21,28 @@ const AddCourse = () => {
   const [value, setValue] = useState("");
   const [isModuleAdd, setIsModuleAdd] = useState(false);
   const [courseTitle, setCourseTitle] = useState("");
-  // const [courseCategory, setCourseCategory] = useState("Blockchain");
-  // const [courseTopic, setCourseTopic] = useState("Blockchain");
-  // const [courseSubTitle, setCourseSubTitle] = useState("Blockchain");
-  // const [courseDuration, setCourseDuration] = useState("30days");
   const [courseDescription, setCourseDescription] = useState("");
   const [thumbnailFile, setThumbnailFile] = useState<File | string>();
   const [videoFile, setVideoFile] = useState<File | string>();
 
   const { address } = useAccount();
 
-  const { isCreating, createCourse } = useCreateCourse();
+  const {
+    isCreating,
+    isPending,
+    isSuccess,
+    isError,
+    error: concError,
+    createCourse,
+    createdCourse,
+  } = useCreateCourse();
+
+  const { deleteCourse } = useDeleteCourse();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!address) return console.log("wallet not connected");
-    const user = await getUserByWalletAddress(address);
+    const user = await createGetUser({ walletAddress: address });
     if (!user) return;
     if (!thumbnailFile || !videoFile)
       return console.log("add a thumb nail and the course video");
@@ -50,6 +57,20 @@ const AddCourse = () => {
     console.log(courseData);
     createCourse(courseData);
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("create course contract call successfull");
+    }
+    if (isError) {
+      console.log(concError?.cause);
+      console.log("Created course", createdCourse, createdCourse?.id);
+      const id = createdCourse?.id;
+      if (id) {
+        deleteCourse(id);
+      }
+    }
+  }, [isSuccess, isError]);
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
@@ -79,78 +100,7 @@ const AddCourse = () => {
                 onChange={(e) => setCourseTitle(e.target.value)}
               />
             </div>
-            {/* <div className=" flex flex-col gap-1">
-              <label htmlFor="category" className=" text-sm text-white">
-                Course Category
-              </label>
-              <select
-                name="category"
-                id="category"
-                className=" p-[0.5rem] rounded-lg border-none"
-                onChange={(e) => setCourseCategory(e.target.value)}
-                value={courseCategory}
-              >
-                <option value="Blockchain">Blockchain</option>
-                <option value="Blockchain">Blockchain</option>
-                <option value="Blockchain">Blockchain</option>
-              </select>
-            </div> */}
-            {/* <div className=" flex flex-col gap-1">
-              <label htmlFor="topic" className=" text-sm text-white">
-                Course Topic
-              </label>
-              <select
-                name="topic"
-                id="topic"
-                className=" p-[0.5rem] rounded-lg border-none"
-                onChange={(e) => setCourseTopic(e.target.value)}
-                value={courseTopic}
-              >
-                <option value="Blockchain">Blockchain</option>
-                <option value="Blockchain">Blockchain</option>
-                <option value="Blockchain">Blockchain</option>
-              </select>
-            </div> */}
-            {/* <div className=" flex flex-col gap-1">
-              <label htmlFor="subtitle" className=" text-sm text-white">
-                Subtitle (Optional)
-              </label>
-              <select
-                name="subtitle"
-                id="subtitle"
-                className=" p-[0.5rem] rounded-lg border-none"
-                onChange={(e) => setCourseSubTitle(e.target.value)}
-                value={courseSubTitle}
-              >
-                <option value="Blockchain">Blockchain</option>
-                <option value="Blockchain">Blockchain</option>
-                <option value="Blockchain">Blockchain</option>
-              </select>
-            </div> */}
-            {/* <div className=" flex flex-col gap-1">
-              <label htmlFor="duration" className=" text-sm text-white">
-                Course Duration
-              </label>
-              <select
-                name="duration"
-                id="duration"
-                className=" p-[0.5rem] rounded-lg border-none"
-                onChange={(e) => setCourseDuration(e.target.value)}
-                value={courseDuration}
-              >
-                <option value="30days">30days</option>
-                <option value="60days">60days</option>
-                <option value="90days">90days</option>
-              </select>
-            </div> */}
           </div>
-
-          {/* <div
-            className=" cursor-pointer bg-[#FFEECB] p-[0.5rem] w-[8rem] mt-[1rem] rounded-lg text-sm flex items-center justify-center font-medium"
-            onClick={() => setIsModuleAdd(true)}
-          >
-            Add Modules
-          </div> */}
           <div className="mt-5">
             <label className="text-white block mb-1" htmlFor="description">
               Description
@@ -174,11 +124,6 @@ const AddCourse = () => {
               style={{ color: "#fff", height: "10rem" }}
             />
           </div>
-
-          {/* <div className=''>
-						<EditorContent editor={editor} style={{ whiteSpace: 'pre-line' }} />
-						<Toolbar editor={editor} content={content} />
-					</div> */}
 
           <div className=" my-[1rem]">
             <label htmlFor="thumbnail" className=" flex flex-col gap-2">

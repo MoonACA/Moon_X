@@ -25,6 +25,15 @@ const Creators = ({ creatorId }: CreatorType) => {
 
     retrieveUser();
   }, [creatorId]);
+
+  function truncateAddr() {
+    if (!userData) return;
+    if (!userData.walletAddress) return;
+    const len = userData.walletAddress.length;
+    const firstPart = userData.walletAddress.slice(0, 5);
+    const lastPart = userData.walletAddress.slice(len - 5, len);
+    return `${firstPart}...${lastPart}`;
+  }
   return (
     <div>
       <div className=" mt-[1rem] flex items-center max-md:flex-col max-md:items-start">
@@ -52,7 +61,9 @@ const Creators = ({ creatorId }: CreatorType) => {
         <div className=" text-[#aaaaaa] text-sm font-medium ml-2">
           <p className="">Created by:</p>
           <ul className=" flex items-center gap-10">
-            <li className="">{userData?.fullName}</li>
+            <li className="">
+              {userData?.fullName ? userData.fullName : truncateAddr()}
+            </li>
             {/* <li className=" list-disc">Faith Chike</li> */}
           </ul>
         </div>

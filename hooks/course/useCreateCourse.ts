@@ -5,9 +5,14 @@ import { uploadToIpfs } from "@/services/ipfs";
 import { useWriteContract } from "wagmi";
 
 export function useCreateCourse() {
-  const { isError, isPending, isSuccess, writeContract } = useWriteContract();
+  const { isError, isPending, isSuccess, error, writeContract } =
+    useWriteContract();
 
-  const { isPending: isCreating, mutate: createCourse } = useMutation({
+  const {
+    isPending: isCreating,
+    mutate: createCourse,
+    data: createdCourse,
+  } = useMutation({
     mutationFn: createCourseApi,
 
     onSuccess: async (data) => {
@@ -20,5 +25,13 @@ export function useCreateCourse() {
     onError: (error) => console.log(error.message),
   });
 
-  return { isCreating, createCourse };
+  return {
+    isCreating,
+    isPending,
+    isError,
+    isSuccess,
+    error,
+    createCourse,
+    createdCourse,
+  };
 }

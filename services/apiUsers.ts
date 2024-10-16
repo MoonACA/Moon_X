@@ -10,16 +10,25 @@ export interface User {
   bio?: string;
 }
 
-async function createUser(newUser: User) {
+async function createGetUser(newUser: User) {
   if (!newUser.walletAddress) throw new Error("Please pass a wallet address");
-  const user = await getUserByWalletAddress(newUser.walletAddress);
-  if (user) {
-    throw new Error(`User already exists`);
+  const { user: userData, error: getUserError } = await getUserByWalletAddress(
+    newUser.walletAddress
+  );
+  if (userData) {
+    return userData;
   }
-  const { error } = await supabase.from("users").insert([newUser]);
+  const { data: newUserData, error } = await supabase
+    .from("users")
+    .insert([newUser])
+    .select()
+    .single();
+
   if (error) {
     throw new Error(`Error creating user: ${error.message}`);
   }
+
+  return newUserData;
 }
 
 async function updateUser(user: User, walletAddress: string) {
@@ -35,17 +44,16 @@ async function updateUser(user: User, walletAddress: string) {
   }
 }
 
-async function getUserByWalletAddress(walletAddress: string): Promise<User> {
+async function getUserByWalletAddress(
+  walletAddress: string
+): Promise<{ user: User; error: PostgrestError | null }> {
   let { data: user, error } = await supabase
     .from("users")
     .select()
     .eq("walletAddress", walletAddress)
     .single();
 
-  if (error) {
-    throw new Error(`Error getting user: ${error.message}`);
-  }
-  return user;
+  return { user, error };
 }
 
 async function getUserById(id: number): Promise<User> {
@@ -63,4 +71,4 @@ async function getUserById(id: number): Promise<User> {
   return user;
 }
 
-export { createUser, updateUser, getUserByWalletAddress, getUserById };
+export { createGetUser, updateUser, getUserByWalletAddress, getUserById };

@@ -56,7 +56,7 @@ async function uploadVideo(
     .upload(videoName, newCourse.videoUrl);
 
   if (storageError) {
-    await supabase.from("courses").delete().eq("id", course.id);
+    await deleteCourse(course.id!);
     throw new Error(`Error uploading video ${storageError}`);
   }
 }
@@ -71,7 +71,7 @@ async function uploadThumbnail(
     .upload(thumbnailName, newCourse.thumbnail);
 
   if (storageError) {
-    await supabase.from("courses").delete().eq("id", course.id);
+    await deleteCourse(course.id!);
     throw new Error("Error uploading thumbnail ");
   }
 }
@@ -84,4 +84,12 @@ async function getCourses() {
   return courses;
 }
 
-export { createCourse, getCourses };
+async function deleteCourse(id: number) {
+  const { error } = await supabase.from("courses").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(`Error deleting course id: ${id}`);
+  }
+}
+
+export { createCourse, getCourses, deleteCourse };
