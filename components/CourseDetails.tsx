@@ -1,19 +1,15 @@
 "use client";
 
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import React from "react";
-import { IoMdArrowRoundBack } from "react-icons/io";
 import BreadCrumbs from "./BreadCrumbs";
-import { BtnPrimaryWhite } from "./Btn";
 import CourseTop from "./CourseTop";
-import img from "@/public/assets/course.jpeg";
-import Image from "next/image";
-import { FaPlay } from "react-icons/fa";
 import Creators from "./Creators";
 import Rating from "./Rating";
 import GoBack from "./GoBack";
 import { useCourses } from "@/hooks/course/useCourses";
 import DOMPurify from "dompurify";
+
 const CourseDetails = () => {
   const { course: courseId } = useParams();
   const { courses, isLoading, error } = useCourses();
