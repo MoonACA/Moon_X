@@ -9,6 +9,10 @@ import { mainnet } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
 import { WagmiProvider } from "wagmi";
+import { ToastContainer, toast } from "react-toastify";
+
+// react toastify
+import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,8 +41,9 @@ export default function App({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact" initialChain={mande}>
+        <RainbowKitProvider modalSize='compact' initialChain={mande}>
           {children}
+          <ToastContainer />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
