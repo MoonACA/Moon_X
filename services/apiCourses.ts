@@ -1,4 +1,5 @@
 import supabase, { supabaseUrl } from "./supabase";
+import uppy from "./uppy";
 
 export interface Course {
   id?: number;
@@ -10,16 +11,19 @@ export interface Course {
   videoUrl: File | string;
 }
 
-async function createCourse(newCourse: Course): Promise<Course> {
+async function createCourse(
+  newCourse: Course,
+  videoName: string
+): Promise<Course> {
   if (
     typeof newCourse.videoUrl == "string" ||
     typeof newCourse.thumbnail == "string"
   )
     throw new Error("video must be of type File");
 
-  const videoName = `${Math.random()}-${newCourse.videoUrl.name}`
-    .replaceAll("/", "")
-    .replaceAll(" ", "");
+  // const videoName = `${Math.random()}-${newCourse.videoUrl.name}`
+  //   .replaceAll("/", "")
+  //   .replaceAll(" ", "");
 
   const videoPath = `${supabaseUrl}/storage/v1/object/public/videos/${videoName}`;
 
@@ -41,7 +45,8 @@ async function createCourse(newCourse: Course): Promise<Course> {
 
   await uploadThumbnail(newCourse, course, thumbnailName);
 
-  await uploadVideo(newCourse, course, videoName);
+  // await uploadVideo(newCourse, course, videoName);
+  await uppy.upload();
 
   return course;
 }
