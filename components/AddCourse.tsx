@@ -3,11 +3,8 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { BtnCancel, BtnSubmit } from "./Btn";
-import QuizModal from "./QuizModal";
 import dynamic from "next/dynamic";
-
 import "react-quill/dist/quill.snow.css";
-import ModuleModal from "./ModuleModal";
 import { useAccount } from "wagmi";
 import { Course } from "@/services/apiCourses";
 import { createGetUser, getUserByWalletAddress } from "@/services/apiUsers";
@@ -20,9 +17,7 @@ import uppy from "@/services/uppy";
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const AddCourse = () => {
-  const [addQuiz, setAddQuiz] = useState(false);
   const [value, setValue] = useState("");
-  const [isModuleAdd, setIsModuleAdd] = useState(false);
   const [courseTitle, setCourseTitle] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [thumbnailFile, setThumbnailFile] = useState<File | string>();
@@ -98,18 +93,19 @@ const AddCourse = () => {
     e.preventDefault();
 
     if (!address) return console.log("wallet not connected");
+    toast.error("wallet not connected");
     const user = await createGetUser({ walletAddress: address });
-    if (!user) return;
+    if (!user) return toast.error("user not found");
     if (!thumbnailFile || !videoFile)
       return console.log("add a thumb nail and the course video");
     setOpenUploadModal(true);
     const courseData: Course = {
-      title: courseTitle,
       creatorId: user.id!,
+      title: courseTitle,
+      fullText: value,
+      description: courseDescription,
       thumbnail: thumbnailFile,
       videoUrl: videoFile,
-      description: courseDescription,
-      fullText: value,
     };
     console.log(courseData);
     createCourse({ newCourse: courseData, videoName });
@@ -117,14 +113,14 @@ const AddCourse = () => {
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
-      {addQuiz && <QuizModal addQuiz={addQuiz} setAddQuiz={setAddQuiz} />}
+      {/* {addQuiz && <QuizModal addQuiz={addQuiz} setAddQuiz={setAddQuiz} />}
 
       {isModuleAdd && (
         <ModuleModal
           isModuleAdd={isModuleAdd}
           setIsModuleAdd={setIsModuleAdd}
         />
-      )}
+      )} */}
 
       <div className="">
         <form action="" onSubmit={(e) => handleSubmit(e)}>
@@ -222,7 +218,7 @@ const AddCourse = () => {
               />
             </div>
 
-            <div className=" flex flex-col gap-2 w-[10rem] max-md:w-full">
+            {/* <div className=" flex flex-col gap-2 w-[10rem] max-md:w-full">
               <p className="text-sm text-white">Set Quiz Questions</p>
               <div
                 className=" bg-[#F5F7FA] p-[2rem] text-center cursor-pointer"
@@ -231,7 +227,7 @@ const AddCourse = () => {
                 <h3 className=" font-medium">Quiz</h3>
                 <p className=" text-[#8C94A3] text-sm">Set Quiz</p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className=" flex items-center justify-between mt-[1rem]">
