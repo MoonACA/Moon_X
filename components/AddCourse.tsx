@@ -11,8 +11,9 @@ import { createGetUser, getUserByWalletAddress } from "@/services/apiUsers";
 import { useCreateCourse } from "@/hooks/course/useCreateCourse";
 import useDeleteCourse from "@/hooks/course/useDeleteCourse";
 import { toast } from "react-toastify";
-import { useUppyEvent, useUppyState } from "@uppy/react";
+import { useUppyState } from "@uppy/react";
 import uppy from "@/services/uppy";
+import { useUploadCourse } from "@/hooks/course/useUploadCourse";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -26,10 +27,7 @@ const AddCourse = () => {
   const { address } = useAccount();
 
   const totalProgress = useUppyState(uppy, (state) => state.totalProgress);
-  console.log({ totalProgress });
-  const errorUploading = useUppyState(uppy, (state) => state.error);
-  const [files] = useUppyEvent(uppy, "file-added");
-  const [result] = useUppyEvent(uppy, "complete");
+
   const [videoName, setVideoName] = useState("");
   const {
     isCreating,
@@ -43,28 +41,14 @@ const AddCourse = () => {
 
   const { deleteCourse } = useDeleteCourse();
 
-  useEffect(() => {
-    if (!videoFile) return;
-    uppy.clear();
-    uppy.addFile(videoFile);
-  }, [videoFile]);
+  const { result } = useUploadCourse(createdCourse, videoFile, setVideoName);
 
   useEffect(() => {
-    const singleFile = files[0];
-    if (!singleFile) return console.log("No uploads");
-    const videoName = `${singleFile.name}-${Math.random()}`;
-    setVideoName(videoName);
-    const supabaseMetadata = {
-      bucketName: "videos",
-      objectName: videoName,
-      name: videoName,
-      contentType: singleFile.type,
-    };
-    singleFile.meta = {
-      ...singleFile.meta,
-      ...supabaseMetadata,
-    };
-  }, [files]);
+    if (result[0]?.successful) {
+      uppy.clear();
+      setVideoFile(undefined);
+    }
+  }, [result]);
 
   useEffect(() => {
     if (isPending) return;
@@ -82,18 +66,10 @@ const AddCourse = () => {
     }
   }, [isSuccess, isError, createdCourse, deleteCourse, isPending]);
 
-  useEffect(() => {
-    if (!createdCourse) return;
-    if (errorUploading) {
-      deleteCourse(createdCourse.id!);
-    }
-  }, [createdCourse, errorUploading, deleteCourse]);
-
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!address) return toast.error("wallet not connected");
 
-    if (!address) return console.log("wallet not connected");
-    toast.error("wallet not connected");
     const user = await createGetUser({ walletAddress: address });
     if (!user) return toast.error("user not found");
     if (!thumbnailFile || !videoFile)
