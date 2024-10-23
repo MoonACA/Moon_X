@@ -3,10 +3,8 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { BtnCancel, BtnSubmit } from "./Btn";
-import QuizModal from "./QuizModal";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import ModuleModal from "./ModuleModal";
 import { useAccount } from "wagmi";
 import { Course } from "@/services/apiCourses";
 import { createGetUser, getUserByWalletAddress } from "@/services/apiUsers";
@@ -40,10 +38,12 @@ const AddCourse = () => {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!address) return console.log("wallet not connected");
+    toast.error("wallet not connected");
     const user = await createGetUser({ walletAddress: address });
-    if (!user) return;
+    if (!user) return toast.error("user not found");
     if (!thumbnailFile || !videoFile)
       return console.log("add a thumb nail and the course video");
+    toast.error("add video / thumbnail");
     const courseData: Course = {
       creatorId: user.id!,
       title: courseTitle,
@@ -57,8 +57,10 @@ const AddCourse = () => {
   }
 
   useEffect(() => {
+    if (isPending) {
+      toast.info("creating course");
+    }
     if (isSuccess) {
-      console.log("create course contract call successful");
       toast.success("course created, will be approved in ~8hours");
     }
     if (isError) {
@@ -70,7 +72,14 @@ const AddCourse = () => {
         deleteCourse(id);
       }
     }
-  }, [isSuccess, isError, concError?.cause, createdCourse, deleteCourse]);
+  }, [
+    isSuccess,
+    isError,
+    concError?.cause,
+    createdCourse,
+    deleteCourse,
+    isPending,
+  ]);
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
