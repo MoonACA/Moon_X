@@ -1,15 +1,15 @@
 import supabase from "./supabase";
 
-type OptionType = {
-  option1: string;
-  option2: string;
-  option3: string;
-  option4: string;
+export type OptionType = {
+  A: string;
+  B: string;
+  C: string;
+  D: string;
 };
 
 type CorrectAnswerType = keyof OptionType;
 
-interface Quiz extends OptionType {
+export interface Quiz extends OptionType {
   id?: number;
   courseId: number;
   question: string;

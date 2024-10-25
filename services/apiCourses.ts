@@ -45,25 +45,9 @@ async function createCourse(
 
   await uploadThumbnail(newCourse, course, thumbnailName);
 
-  // await uploadVideo(newCourse, course, videoName);
-  await uppy.upload();
+  await uppy.upload(); // upload video
 
   return course;
-}
-
-async function uploadVideo(
-  newCourse: Course,
-  course: Course,
-  videoName: string
-) {
-  const { error: storageError } = await supabase.storage
-    .from("videos")
-    .upload(videoName, newCourse.videoUrl);
-
-  if (storageError) {
-    await deleteCourse(course.id!);
-    throw new Error(`Error uploading video ${storageError}`);
-  }
 }
 
 async function uploadThumbnail(

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Course, createCourse as createCourseApi } from "@/services/apiCourses";
-import { createCourse as createCourseConc } from "@/services/moonXContract";
+import { writeToContract } from "@/services/moonXContract";
 import { uploadToIpfs } from "@/services/ipfs";
 import { useWriteContract } from "wagmi";
 import { Dispatch, SetStateAction } from "react";
@@ -28,7 +28,11 @@ export function useCreateCourse(
       const ipfsHash = await uploadToIpfs(data);
       const uri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
       setOpenUploadModal(false);
-      await createCourseConc(writeContract, { metadataUri: uri });
+      writeToContract(writeContract, {
+        args: [uri],
+        functionName: "createCourse",
+        value: "0.75",
+      });
       console.log("Course created successfully", data);
     },
 
