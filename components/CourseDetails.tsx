@@ -35,24 +35,12 @@ const CourseDetails = () => {
         </div>
 
         <div className=" relative w-full h-[20rem] my-[1rem]">
-          {/* <Image
-            src={img}
-            alt=""
-            layout="fill"
-            objectFit="cover"
-            className=" rounded-2xl"
-          /> */}
-
           <iframe
             src={course?.videoUrl}
             frameBorder={"0"}
             width={"100%"}
             height={"100%"}
           ></iframe>
-
-          {/* <div className=" absolute top-[50%] bottom-[50%] left-[50%] mx-auto right-[50%] text-[#FF6636] text-2xl p-[0.5rem] bg-white w-[3rem] h-[3rem] rounded-full flex items-center justify-center cursor-pointer">
-            <FaPlay />
-          </div> */}
         </div>
 
         <h2 className=" text-xl text-white font-bold mb-[1rem]">Description</h2>

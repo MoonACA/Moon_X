@@ -21,10 +21,6 @@ async function createCourse(
   )
     throw new Error("video must be of type File");
 
-  // const videoName = `${Math.random()}-${newCourse.videoUrl.name}`
-  //   .replaceAll("/", "")
-  //   .replaceAll(" ", "");
-
   const videoPath = `${supabaseUrl}/storage/v1/object/public/videos/${videoName}`;
 
   const thumbnailName = `${Math.random()}-${newCourse.thumbnail.name}`

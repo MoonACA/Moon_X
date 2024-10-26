@@ -47,15 +47,6 @@ const Creators = ({ creatorId }: CreatorType) => {
               className=" rounded-full"
             />
           </div>
-          {/* <div className=" rounded-full border border-white w-[3rem] h-[3rem] relative left-[-1.5rem]">
-            <Image
-              src={two}
-              alt=""
-              layout="fill"
-              objectFit="cover"
-              className=" rounded-full"
-            />
-          </div> */}
         </div>
 
         <div className=" text-[#aaaaaa] text-sm font-medium ml-2">
@@ -64,7 +55,6 @@ const Creators = ({ creatorId }: CreatorType) => {
             <li className="">
               {userData?.fullName ? userData.fullName : truncateAddr()}
             </li>
-            {/* <li className=" list-disc">Faith Chike</li> */}
           </ul>
         </div>
       </div>
