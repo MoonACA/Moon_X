@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Avatar } from "@mui/material";
 import { IoCopy } from "react-icons/io5";
+//TO ADD THE NAME AND WALLET ADDRESS
 
 import React from "react";
 
@@ -51,9 +52,9 @@ export default function Settings() {
                   }}
                 />
                 <div className="mt-1">
-                  <p className="text-white text-sm md:text-lg">Adam Trust</p>
+                  <p className="text-white text-sm md:text-lg">{"name"}</p>
                   <p className="text-white md:text-sm text-xs gap-2">
-                    000x1234567890{" "}
+                    {1910}{" "}
                     <span
                       className="inline-flex mr-1"
                       onClick={handleCopy}
@@ -65,7 +66,7 @@ export default function Settings() {
                           color: "transparent", // Makes the inside of the icon transparent
                           stroke: "white", // Changes the outline color to white
                           strokeWidth: "30",
-                        }}
+                        }} // ADD THE NAME AND WALLET ADDRESS
                       />{" "}
                     </span>
                     {copySuccess && <span className="ml-2">{copySuccess}</span>}

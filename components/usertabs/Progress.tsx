@@ -1,7 +1,7 @@
-'use client';
-import React, { useState } from 'react';
-import Image from 'next/image';
-import CourseDialog from './ModelBox';
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import CourseDialog from "./ModelBox";
 
 type CardProps = {
   image: string;
@@ -65,33 +65,12 @@ const Card: React.FC<CardProps> = ({
 const ProgressStreakTab: React.FC = () => {
   const courses = [
     {
-      image: '/assets/moonxImg1.png',
-      category: 'Blockchain',
-      title: 'Introduction To Blockchain Technology',
-      reward: '50 mand',
-      buttonLabel: 'Watch Course',
-    },
-    {
-      image: '/assets/moonxImg1.png',
-      category: 'Blockchain',
-      title: 'Introduction To Blockchain Technology',
-      reward: '50 mand',
-      buttonLabel: 'Watch Course',
-    },
-    {
-      image: '/assets/moonxImg1.png',
-      category: 'Blockchain',
-      title: 'Introduction To Blockchain Technology',
-      reward: '50 mand',
-      buttonLabel: 'Watch Course',
-    },
-    {
-      image: '/assets/moonxImg1.png',
-      category: 'Blockchain',
-      title: 'Introduction To Blockchain Technology',
-      reward: '50 mand',
-      buttonLabel: 'Watch Course',
-    },
+      image: "/assets/moonxImg1.png",
+      category: "Blockchain",
+      title: "Introduction To Blockchain Technology",
+      reward: "50 mand",
+      buttonLabel: "Watch Course",
+    }, // ROUTE THE ENROLLED COURSES FROM THE DB HERE
   ];
 
   return (

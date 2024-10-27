@@ -64,10 +64,10 @@ export default function UserProfile() {
       }))
     );
   };
-  const [activeTab, setActiveTab] = useState("Profile");
+  const [activeTab, setActiveTab] = useState("Enrolled Courses");
   const renderContent = () => {
     switch (activeTab) {
-      case "Profile":
+      case "Enrolled Courses":
         return <ProgressStreakTab />;
 
       case "Notification":
@@ -150,9 +150,9 @@ export default function UserProfile() {
               <div className=" ">
                 <div className="flex items-center gap-1 justify-between">
                   <button
-                    onClick={() => setActiveTab("Profile")}
+                    onClick={() => setActiveTab("Enrolled Courses")}
                     className={`w-1/2 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500 ${
-                      activeTab === "Profile"
+                      activeTab === "Enrolled Courses"
                         ? "bg-[#FFEECB] font-semibold text-black"
                         : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                     }`}
