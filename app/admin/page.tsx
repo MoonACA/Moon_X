@@ -1,7 +1,7 @@
-'use client';
-import { useState } from 'react';
-import { Avatar } from '@mui/material';
-import { IoCopy } from 'react-icons/io5';
+"use client";
+import { useState } from "react";
+import { Avatar } from "@mui/material";
+import { IoCopy } from "react-icons/io5";
 import {
   Table,
   TableBody,
@@ -14,118 +14,119 @@ import {
   Menu,
   MenuItem,
   Typography,
-} from '@mui/material';
-import React from 'react';
+} from "@mui/material";
+import React from "react";
 
-import { FaEllipsisV } from 'react-icons/fa';
+import { FaEllipsisV } from "react-icons/fa";
 
 const rows = [
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'Cyntia Boyega',
-      handle: '@cyntia',
+      avatar: "/path-to-avatar1.jpg",
+      name: "Cyntia Boyega",
+      handle: "@cyntia",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'active', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "active", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'John Oke',
-      handle: '@John',
+      avatar: "/path-to-avatar1.jpg",
+      name: "John Oke",
+      handle: "@John",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'pending', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "pending", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'Faith Donatus',
-      handle: '@Faith',
+      avatar: "/path-to-avatar1.jpg",
+      name: "Faith Donatus",
+      handle: "@Faith",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'active', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "active", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'Cyntia Boyega',
-      handle: '@cyntia',
+      avatar: "/path-to-avatar1.jpg",
+      name: "Cyntia Boyega",
+      handle: "@cyntia",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'pending', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "pending", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'Faith Donatus',
-      handle: '@Faith',
+      avatar: "/path-to-avatar1.jpg",
+      name: "Faith Donatus",
+      handle: "@Faith",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'active', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "active", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'Faith Donatus',
-      handle: '@Faith',
+      avatar: "/path-to-avatar1.jpg",
+      name: "Faith Donatus",
+      handle: "@Faith",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'active', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "active", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
   {
     Instructor: {
-      avatar: '/path-to-avatar1.jpg',
-      name: 'Cyntia Boyega',
-      handle: '@cyntia',
+      avatar: "/path-to-avatar1.jpg",
+      name: "Cyntia Boyega",
+      handle: "@cyntia",
     },
-    courseTitle: 'Introduction to Blockchain',
-    category: 'BlockChain',
+    courseTitle: "Introduction to Blockchain",
+    category: "BlockChain",
     dateCreated: {
-      date: '12 Jul 2024',
-      time: '08:45 AM',
+      date: "12 Jul 2024",
+      time: "08:45 AM",
     },
-    status: 'pending', // or 'pending'
-    action: 'viewcourse', // or 'approve course'
+    status: "pending", // or 'pending'
+    action: "viewcourse", // or 'approve course'
   },
 ];
+
 export default function Admin() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -139,29 +140,29 @@ export default function Admin() {
     setAnchorEl(null);
   };
 
-  const [copySuccess, setCopySuccess] = useState('');
+  const [copySuccess, setCopySuccess] = useState("");
 
   const handleCopy = () => {
-    const textToCopy = '000x1234567890';
+    const textToCopy = "000x1234567890";
     navigator.clipboard.writeText(textToCopy).then(
       () => {
-        setCopySuccess('Copied!');
-        setTimeout(() => setCopySuccess(''), 2000); // Reset after 2 seconds
+        setCopySuccess("Copied!");
+        setTimeout(() => setCopySuccess(""), 2000); // Reset after 2 seconds
       },
       () => {
-        setCopySuccess('Failed to copy');
+        setCopySuccess("Failed to copy");
       }
     );
   };
-  const [activeTab, setActiveTab] = useState('All Courses');
+  const [activeTab, setActiveTab] = useState("All Courses");
   const renderContent = () => {
     switch (activeTab) {
-      case 'All Courses':
-        return 'Hi';
-      case 'Active Courses':
-        return 'No';
-      case 'Pending Courses':
-        return 'm';
+      case "All Courses":
+        return "Hi";
+      case "Active Courses":
+        return "No";
+      case "Pending Courses":
+        return "m";
       default:
         return null;
     }
@@ -182,26 +183,26 @@ export default function Admin() {
                     sx={{
                       width: { xs: 40, sm: 56 }, // 40px width for mobile, 56px for larger screens
                       height: { xs: 40, sm: 56 }, // 40px height for mobile, 56px for larger screens
-                      border: '2px solid white', // 2px white border
+                      border: "2px solid white", // 2px white border
                     }}
                   />
                   <div className="mt-1">
                     <p className="text-white text-sm md:text-lg">Admin</p>
                     <p className="text-white md:text-sm text-xs gap-2">
-                      000x1234567890{' '}
+                      000x1234567890{" "}
                       <span
                         className="inline-flex mr-1"
                         onClick={handleCopy}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                       >
-                        {' '}
+                        {" "}
                         <IoCopy
                           style={{
-                            color: 'transparent', // Makes the inside of the icon transparent
-                            stroke: 'white', // Changes the outline color to white
-                            strokeWidth: '30',
+                            color: "transparent", // Makes the inside of the icon transparent
+                            stroke: "white", // Changes the outline color to white
+                            strokeWidth: "30",
                           }}
-                        />{' '}
+                        />{" "}
                       </span>
                       {copySuccess && (
                         <span className="ml-2">{copySuccess}</span>
@@ -215,19 +216,19 @@ export default function Admin() {
             <div className="flex items-center justify-between gap-2 md:gap-0">
               <div>
                 <button
-                  onClick={() => setActiveTab('All Courses')}
+                  onClick={() => setActiveTab("All Courses")}
                   className={`w-24 md:w-64 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500  ${
-                    activeTab === 'All Courses'
-                      ? 'bg-[#FFEECB] font-semibold text-black'
-                      : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                    activeTab === "All Courses"
+                      ? "bg-[#FFEECB] font-semibold text-black"
+                      : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                   }`}
                 >
                   All Courses
                   <span
                     className={`ml-1 md:ml-4 inline-flex text-xs font-bold rounded-full w-4 h-4 md:h-6 md:w-6 items-center justify-center ${
-                      activeTab === 'All Courses'
-                        ? 'bg-[#17315C] text-white '
-                        : 'bg-white text-[#17315C]'
+                      activeTab === "All Courses"
+                        ? "bg-[#17315C] text-white "
+                        : "bg-white text-[#17315C]"
                     }`}
                   >
                     5
@@ -236,19 +237,19 @@ export default function Admin() {
               </div>
               <div>
                 <button
-                  onClick={() => setActiveTab('Active Courses')}
+                  onClick={() => setActiveTab("Active Courses")}
                   className={`w-24 md:w-64 h-12 md:h-16 text-sm  md:text-base  text-white focus:text-black  rounded-md flex items-center justify-center transition duration-500  ${
-                    activeTab === 'Active Courses'
-                      ? 'bg-[#FFEECB] font-semibold text-black'
-                      : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                    activeTab === "Active Courses"
+                      ? "bg-[#FFEECB] font-semibold text-black"
+                      : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                   }`}
                 >
                   Active Courses
                   <span
                     className={`ml-1 md:ml-4 inline-flex text-xs font-bold rounded-full w-4 h-4 md:h-6 md:w-6 items-center justify-center ${
-                      activeTab === 'Active Courses'
-                        ? 'bg-[#17315C] text-white '
-                        : 'bg-white text-[#17315C]'
+                      activeTab === "Active Courses"
+                        ? "bg-[#17315C] text-white "
+                        : "bg-white text-[#17315C]"
                     }`}
                   >
                     5
@@ -257,19 +258,19 @@ export default function Admin() {
               </div>
               <div>
                 <button
-                  onClick={() => setActiveTab('Pending Courses')}
+                  onClick={() => setActiveTab("Pending Courses")}
                   className={`w-24 md:w-64 h-12 md:h-16 text-sm md:text-base   text-white focus:text-black rounded-md flex items-center justify-center transition duration-500  ${
-                    activeTab === 'Pending Courses'
-                      ? 'bg-[#FFEECB] font-semibold text-black'
-                      : 'text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black'
+                    activeTab === "Pending Courses"
+                      ? "bg-[#FFEECB] font-semibold text-black"
+                      : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                   }`}
                 >
                   Pending Courses
                   <span
                     className={`ml-1 md:ml-4 inline-flex text-xs font-bold rounded-full w-4 h-4 md:h-6 md:w-6 items-center justify-center ${
-                      activeTab === 'Pending Courses'
-                        ? 'bg-[#17315C] text-white '
-                        : 'bg-white text-[#17315C]'
+                      activeTab === "Pending Courses"
+                        ? "bg-[#17315C] text-white "
+                        : "bg-white text-[#17315C]"
                     }`}
                   >
                     5
@@ -298,18 +299,18 @@ export default function Admin() {
                         key={index}
                         style={{
                           backgroundColor:
-                            index % 2 === 0 ? 'white' : '#f5f5f5',
+                            index % 2 === 0 ? "white" : "#f5f5f5",
                         }}
                       >
                         <TableCell>
                           <div
-                            style={{ display: 'flex', alignItems: 'center' }}
+                            style={{ display: "flex", alignItems: "center" }}
                           >
                             <Avatar
                               src={row.Instructor.avatar}
                               alt={row.Instructor.name}
                             />
-                            <div style={{ marginLeft: '8px' }}>
+                            <div style={{ marginLeft: "8px" }}>
                               <Typography variant="body1">
                                 {row.Instructor.name}
                               </Typography>
@@ -326,27 +327,27 @@ export default function Admin() {
                         </TableCell>
                         <TableCell>
                           <div
-                            style={{ display: 'flex', alignItems: 'center' }}
+                            style={{ display: "flex", alignItems: "center" }}
                           >
                             <span
                               style={{
-                                width: '8px',
-                                height: '8px',
-                                borderRadius: '50%',
+                                width: "8px",
+                                height: "8px",
+                                borderRadius: "50%",
                                 backgroundColor:
-                                  row.status === 'active'
-                                    ? '#28a745'
-                                    : '#ffc107',
-                                marginRight: '8px',
+                                  row.status === "active"
+                                    ? "#28a745"
+                                    : "#ffc107",
+                                marginRight: "8px",
                               }}
                             />
                             <Typography
                               variant="body2"
                               style={{
                                 color:
-                                  row.status === 'active'
-                                    ? '#28a745'
-                                    : '#ffc107',
+                                  row.status === "active"
+                                    ? "#28a745"
+                                    : "#ffc107",
                               }}
                             >
                               {row.status.charAt(0).toUpperCase() +

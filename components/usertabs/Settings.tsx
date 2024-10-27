@@ -1,7 +1,7 @@
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Switch from '@mui/material/Switch';
-import { FiUpload } from 'react-icons/fi';
+import React from "react";
+import Avatar from "@mui/material/Avatar";
+import Switch from "@mui/material/Switch";
+import { FiUpload } from "react-icons/fi";
 
 interface NotificationSettingProps {
   title: string;
@@ -25,18 +25,18 @@ const NotificationSetting: React.FC<NotificationSettingProps> = ({
       <Switch
         defaultChecked={isChecked}
         sx={{
-          '& .MuiSwitch-switchBase': {
-            color: 'white',
-            '&:not(.Mui-checked) .MuiSwitch-thumb': {
-              backgroundColor: 'white',
+          "& .MuiSwitch-switchBase": {
+            color: "white",
+            "&:not(.Mui-checked) .MuiSwitch-thumb": {
+              backgroundColor: "white",
             },
           },
-          '& .MuiSwitch-track': {
-            backgroundColor: '#e0e0e0',
+          "& .MuiSwitch-track": {
+            backgroundColor: "#e0e0e0",
             opacity: 1,
           },
-          '&.Mui-checked .MuiSwitch-track': {
-            backgroundColor: '#f5a623',
+          "&.Mui-checked .MuiSwitch-track": {
+            backgroundColor: "#f5a623",
           },
         }}
         color="warning"
@@ -60,7 +60,7 @@ const ProfileSettings: React.FC = () => {
           <label
             htmlFor="upload-photo"
             className="md:py-2 py-1 bg-gray-700 text-white text-xs text-center cursor-pointer flex items-center justify-center"
-            style={{ width: '100%' }} // Ensure the button has the same width as the Avatar
+            style={{ width: "100%" }} // Ensure the button has the same width as the Avatar
           >
             <span className="inline-flex items-center justify-center">
               <FiUpload className="md:mr-2 md:flex hidden" /> Upload Photo
@@ -69,7 +69,7 @@ const ProfileSettings: React.FC = () => {
           <input
             type="file"
             id="upload-photo"
-            style={{ display: 'none' }} // Hide the input field
+            style={{ display: "none" }} // Hide the input field
           />
           <span className="text-center text-white text-[7px] mt-2">
             Image Size should be under 1MB <br /> and Image ratio needs to be
@@ -119,19 +119,14 @@ const ProfileSettings: React.FC = () => {
       {/* Notifications settings */}
 
       <NotificationSetting
-        title="Activities in Your Workspace"
-        description="Receive emails when you get comment section and reminders?"
-        isChecked={true}
+        title="Airdrops and Tokens Update"
+        description="Receive an email about token launches, airdrops and new features from MoonX"
+        isChecked={false}
       />
       <NotificationSetting
-        title="Always send email notifications?"
-        description="Receive emails about activity in your workspace, even when you are active on the app?"
-        isChecked={true}
-      />
-      <NotificationSetting
-        title="Announcements and update emails"
-        description="Receive occasional emails about product launches and new features from MoonX"
-        isChecked={true}
+        title="Recieve notifications on email?"
+        description=""
+        isChecked={false}
       />
     </div>
   );
