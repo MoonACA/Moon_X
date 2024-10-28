@@ -89,15 +89,6 @@ const AddCourse = () => {
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
-      {/* {addQuiz && <QuizModal addQuiz={addQuiz} setAddQuiz={setAddQuiz} />}
-
-      {isModuleAdd && (
-        <ModuleModal
-          isModuleAdd={isModuleAdd}
-          setIsModuleAdd={setIsModuleAdd}
-        />
-      )} */}
-
       <div className="">
         <form action="" onSubmit={(e) => handleSubmit(e)}>
           <div className="">

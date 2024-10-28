@@ -7,7 +7,7 @@ type CardProps = {
   image: string;
   category: string;
   title: string;
-  reward: string;
+  registeredUsers: string;
   buttonLabel: string;
 };
 
@@ -15,7 +15,7 @@ const Card: React.FC<CardProps> = ({
   image,
   category,
   title,
-  reward,
+  registeredUsers,
   buttonLabel,
 }) => {
   const [open, setOpen] = useState(false);
@@ -43,9 +43,9 @@ const Card: React.FC<CardProps> = ({
         </div>
         <h3 className="text-white mt-3 font-bold md:text-xl">{title}</h3>
         <div className="flex items-center justify-between mt-2">
-          <p className="text-white">Reward</p>
+          <p className="text-white">Registered Users</p>
           <p className="text-red-500 text-xs rounded-md bg-white px-2 py-1 uppercase">
-            {reward}
+            {registeredUsers}
           </p>
         </div>
         <hr className="mt-2 bg-white h-[1px]" />
@@ -62,15 +62,15 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
-const ProgressStreakTab: React.FC = () => {
+const MyCoursesTab: React.FC = () => {
   const courses = [
     {
       image: "/assets/moonxImg1.png",
       category: "Blockchain",
       title: "Introduction To Blockchain Technology",
-      reward: "50 mand",
-      buttonLabel: "Watch Course",
-    }, // ROUTE THE ENROLLED COURSES FROM THE DB HERE
+      registeredUsers: "100",
+      buttonLabel: "Edit",
+    }, // ROUTE THE USER COURSES FROM THE DB HERE
   ];
 
   return (
@@ -81,7 +81,7 @@ const ProgressStreakTab: React.FC = () => {
           image={course.image}
           category={course.category}
           title={course.title}
-          reward={course.reward}
+          registeredUsers={course.registeredUsers}
           buttonLabel={course.buttonLabel}
         />
       ))}
@@ -89,5 +89,4 @@ const ProgressStreakTab: React.FC = () => {
   );
 };
 
-export default ProgressStreakTab;
-//MAP ENROLLED COURSES HERE
+export default MyCoursesTab;

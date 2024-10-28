@@ -1,18 +1,18 @@
-'use client';
-import { useState, useEffect } from 'react';
-import BrandLogo from '@/public/assets/BrandLogo.png';
-import Image from 'next/image';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { RiWallet3Line } from 'react-icons/ri';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+"use client";
+import { useState, useEffect } from "react";
+import BrandLogo from "@/public/assets/BrandLogo.png";
+import Image from "next/image";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { RiWallet3Line } from "react-icons/ri";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   FaHome,
   FaInfoCircle,
   FaCogs,
   FaEnvelope,
   FaTimes,
-} from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
+} from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import {
   Drawer,
   IconButton,
@@ -20,14 +20,14 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-} from '@mui/material';
-import { useAccount } from 'wagmi';
+} from "@mui/material";
+import { useAccount } from "wagmi";
 
 export default function Header() {
   const router = useRouter();
   const { isConnected, address } = useAccount();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [sessionId, setSessionId] = useState('your-session-id-here');
+  const [sessionId, setSessionId] = useState("your-session-id-here");
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -38,26 +38,26 @@ export default function Header() {
   const handleDrawerClose = () => setIsDrawerOpen(false);
 
   const navItems = [
-    { text: 'Home', Link: '', icon: <FaHome /> },
-    { text: 'Course', Link: 'course', icon: <FaInfoCircle /> },
-    { text: 'Swap', Link: 'admin', icon: <FaCogs /> },
-    { text: 'Profile', Link: 'userprofile', icon: <FaEnvelope /> },
-    { text: 'Reward', Link: 'reward', icon: <FaEnvelope /> },
+    { text: "Home", Link: "", icon: <FaHome /> },
+    { text: "Course", Link: "course", icon: <FaInfoCircle /> },
+    { text: "Swap", Link: "admin", icon: <FaCogs /> },
+    { text: "Profile", Link: "userprofile", icon: <FaEnvelope /> },
+    { text: "Reward", Link: "reward", icon: <FaEnvelope /> },
   ];
 
   useEffect(() => {
     if (isConnected && address) {
       registerUser(sessionId, address); // Pass both sessionId and userAddress
-      router.push('/courses');
+      router.push("/courses");
     }
   }, [isConnected, address, router]);
 
   const registerUser = async (sessionId: string, userAddress: string) => {
     try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
+      const response = await fetch("/api/user", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           session_id: sessionId,
@@ -65,9 +65,9 @@ export default function Header() {
         }),
       });
       const data = await response.json();
-      console.log('Registration Response:', data);
+      console.log("Registration Response:", data);
     } catch (error) {
-      console.error('Error during user registration:', error);
+      console.error("Error during user registration:", error);
     }
   };
 
@@ -88,10 +88,10 @@ export default function Header() {
               open={isDrawerOpen}
               onClose={handleDrawerClose}
               sx={{
-                '& .MuiDrawer-paper': {
-                  width: '250px',
-                  top: '11%',
-                  height: '50%',
+                "& .MuiDrawer-paper": {
+                  width: "250px",
+                  top: "11%",
+                  height: "50%",
                 },
               }}
             >
@@ -127,7 +127,7 @@ export default function Header() {
             />
 
             <nav className="md:flex gap-12 items-center font-bold text-white hidden">
-              {['Home', 'Course', 'Swap', 'About Us'].map((text) => (
+              {["Home", "Course", "Swap", "About Us"].map((text) => (
                 <a
                   key={text}
                   href="#"
@@ -152,8 +152,8 @@ export default function Header() {
                 return (
                   <div
                     {...(!ready && {
-                      'aria-hidden': true,
-                      style: { opacity: 0, pointerEvents: 'none' },
+                      "aria-hidden": true,
+                      style: { opacity: 0, pointerEvents: "none" },
                     })}
                   >
                     {!connected ? (
@@ -174,9 +174,9 @@ export default function Header() {
                         </button>
                       </>
                     ) : (
-                      <div style={{ display: 'flex', gap: 12 }}>
+                      <div style={{ display: "flex", gap: 12 }}>
                         <button onClick={openAccountModal} type="button">
-                          {account.displayName}
+                          {account.address}
                         </button>
                       </div>
                     )}

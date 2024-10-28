@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-
 import "../globals.css";
 import UserNav from "@/components/courses/UserNav";
 import SideBar from "@/components/courses/SideBar";

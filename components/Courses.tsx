@@ -11,11 +11,11 @@ const Courses = () => {
     <div className=" ">
       <div className=" text-white mb-[2rem]">
         <h1 className=" text-[2rem] font-bold mb-[0.5rem] cursor-pointer">
-          Master the Future of the Internet with Web3
+          Master the Future of the Internet with Web3 Tools
         </h1>
         <p className=" text-sm w-[30vw]">
-          Comprehensive Courses on Blockchain, Smart Contracts, and
-          Decentralized Applications
+          Comprehensive Courses on Blockchain, Smart Contracts, and Emerging
+          Technologies
         </p>
       </div>
 

@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { FaStar } from "react-icons/fa";
-import { LuUser2 } from "react-icons/lu";
 
 interface CourseType {
   course: {

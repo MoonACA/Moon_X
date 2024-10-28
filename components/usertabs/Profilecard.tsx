@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import wallet from '@/public/assets/Wallet.png';
-import Cupstar from '@/public/assets/CupStar.png';
-import Note from '@/public/assets/Notebook.png';
-import Vector from '@/public/assets/Vector.png';
-import Image from 'next/image';
+import wallet from "@/public/assets/Wallet.png";
+import Cupstar from "@/public/assets/CupStar.png";
+import Note from "@/public/assets/Notebook.png";
+import Vector from "@/public/assets/Vector.png";
+import Image from "next/image";
 
-import React from 'react';
+import React from "react";
 
 export default function ProfileCard() {
   return (
@@ -25,7 +25,7 @@ export default function ProfileCard() {
             124 Mand
           </p>
           <p className="mt-1 text-[10px] md:text-xs font-extralight md:font-light">
-            Balance
+            124 Moonx
           </p>
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function ProfileCard() {
         </div>
         <div className="md:w-32 w-8 ">
           <p className="font-medium md:font-semibold  text-xs md:text-base">
-            24 Days
+            Coming Soon !{" "}
           </p>
           <p className="mt-1 text-[10px] md:text-xs font-extralight md:font-light">
             Daily Streak
@@ -74,7 +74,7 @@ export default function ProfileCard() {
         </div>
         <div className="md:w-32 w-8">
           <p className="font-medium md:font-semibold text-xs md:text-base">
-            11
+            Coming soon
           </p>
           <p className="mt-1 text-[10px] md:text-xs font-extralight md:font-light">
             Rank

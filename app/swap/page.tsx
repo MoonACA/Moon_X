@@ -1,7 +1,8 @@
-import React from 'react';
-import saly from '@/public/assets/Saly2.png';
-import Image from 'next/image';
-import star from '@/public/assets/star2.png';
+import React from "react";
+import saly from "@/public/assets/Saly2.png";
+import Image from "next/image";
+import star from "@/public/assets/star2.png";
+
 export default function page() {
   return (
     <div>

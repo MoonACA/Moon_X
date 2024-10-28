@@ -2,13 +2,11 @@
 import { useState } from "react";
 import { Avatar } from "@mui/material";
 import { IoCopy } from "react-icons/io5";
-
 import Link from "next/link";
 import React from "react";
 import ProgressStreakTab from "@/components/usertabs/Progress";
-import ProfileSettings from "@/components/usertabs/Settings";
-import Notifications from "@/components/usertabs/Notification";
 import ProfileCard from "@/components/usertabs/Profilecard";
+import MyCoursesTab from "@/components/usertabs/MyCourses";
 
 export default function UserProfile() {
   const [notifications, setNotifications] = useState([
@@ -70,13 +68,8 @@ export default function UserProfile() {
       case "Enrolled Courses":
         return <ProgressStreakTab />;
 
-      case "Notification":
-        return (
-          <Notifications
-            notifications={notifications}
-            onMarkAsRead={markAllAsRead}
-          />
-        );
+      case "MyCourses":
+        return <MyCoursesTab />;
       default:
         return null;
     }
@@ -161,9 +154,9 @@ export default function UserProfile() {
                   </button>
 
                   <button
-                    onClick={() => setActiveTab("Notification")}
+                    onClick={() => setActiveTab("MyCourses")}
                     className={`w-1/2 h-12 md:h-16 text-sm md:text-base rounded-md flex items-center justify-center transition duration-500 ${
-                      activeTab === "Notification"
+                      activeTab === "MyCourses"
                         ? "bg-[#FFEECB] font-semibold text-black"
                         : "text-white hover:bg-[#ffeecb] hover:font-semibold hover:text-black"
                     }`}
@@ -175,7 +168,6 @@ export default function UserProfile() {
               <hr className="bg-white h-[2px] md:-ml-7 md:-mr-7 mt-1 mb-3 sm:mb-7" />
               <ProfileCard />
             </div>
-            {/* Profile tab  grid*/}
             <div className="mt-4">{renderContent()}</div>
           </div>
         </div>
