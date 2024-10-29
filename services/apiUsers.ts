@@ -19,7 +19,7 @@ async function createGetUser(newUser: User) {
     return userData;
   }
   const { data: newUserData, error } = await supabase
-    .from("users")
+    .from("creators")
     .insert([newUser])
     .select()
     .single();

@@ -27,12 +27,12 @@ export function useCreateCourse(
     onSuccess: async (data) => {
       const ipfsHash = await uploadToIpfs(data);
       const uri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
-      setOpenUploadModal(false);
       writeToContract(writeContract, {
         args: [uri],
         functionName: "createCourse",
         value: "0.75",
       });
+      setOpenUploadModal(false);
       console.log("Course created successfully", data);
     },
 
