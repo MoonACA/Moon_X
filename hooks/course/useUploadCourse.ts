@@ -23,7 +23,7 @@ function useUploadCourse(
   useEffect(() => {
     const singleFile = files[0];
     if (!singleFile) return console.log("No uploads");
-    const videoName = `${singleFile.name}-${Math.random()}`;
+    const videoName = `${Math.random()}-${singleFile.name}`;
     setVideoName(videoName);
     const supabaseMetadata = {
       bucketName: "videos",
