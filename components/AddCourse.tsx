@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useUppyState } from "@uppy/react";
 import uppy from "@/services/uppy";
 import { useUploadCourse } from "@/hooks/course/useUploadCourse";
+import { useUser } from "@/hooks/user/useUser";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -43,6 +44,14 @@ const AddCourse = () => {
 
   const { result } = useUploadCourse(createdCourse, videoFile, setVideoName);
 
+  const {
+    user,
+    isPending: fetchingUser,
+    error: userFetchError,
+  } = useUser(address);
+
+  console.log({ user, userFetchError });
+
   useEffect(() => {
     if (result[0]?.successful) {
       uppy.clear();
@@ -69,14 +78,12 @@ const AddCourse = () => {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!address) return toast.error("wallet not connected");
-
-    const user = await createGetUser({ walletAddress: address });
     if (!user) return toast.error("user not found");
     if (!thumbnailFile || !videoFile)
       return console.log("add a thumb nail and the course video");
     setOpenUploadModal(true);
     const courseData: Course = {
-      creatorId: user.id!,
+      creatorAddress: address,
       title: courseTitle,
       fullText: value,
       description: courseDescription,

@@ -4,27 +4,14 @@ import React, { useEffect, useState } from "react";
 import one from "@/public/assets/creator1.png";
 import two from "@/public/assets/creator2.png";
 import Image from "next/image";
-import { getUserById, User } from "@/services/apiUsers";
+import { useUser } from "@/hooks/user/useUser";
 
 type CreatorType = {
-  creatorId: number;
+  creatorAddress: string;
 };
 
-const Creators = ({ creatorId }: CreatorType) => {
-  const [userData, setUserData] = useState<User>();
-  useEffect(() => {
-    async function retrieveUser() {
-      if (!creatorId) return;
-      try {
-        const userData = await getUserById(creatorId);
-        setUserData(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    retrieveUser();
-  }, [creatorId]);
+const Creators = ({ creatorAddress }: CreatorType) => {
+  const { user: userData } = useUser(creatorAddress);
 
   function truncateAddr() {
     if (!userData) return;
@@ -53,7 +40,7 @@ const Creators = ({ creatorId }: CreatorType) => {
           <p className="">Created by:</p>
           <ul className=" flex items-center gap-10">
             <li className="">
-              {userData?.fullName ? userData.fullName : truncateAddr()}
+              {userData?.displayName ? userData.displayName : truncateAddr()}
             </li>
           </ul>
         </div>

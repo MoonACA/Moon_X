@@ -1,25 +1,32 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import supabase from "./supabase";
+import supabase, { supabaseUrl } from "./supabase";
 
 export interface User {
   id?: number;
-  walletAddress?: string;
+  walletAddress: string;
   fullName?: string;
-  profilePicture?: string;
-  username?: string;
+  profilePicture?: string | File;
+  displayName?: string;
   bio?: string;
 }
 
-async function createGetUser(newUser: User) {
+const TABLE_NAME = "creators";
+
+async function createGetUser(newUser: User): Promise<User> {
   if (!newUser.walletAddress) throw new Error("Please pass a wallet address");
   const { user: userData, error: getUserError } = await getUserByWalletAddress(
     newUser.walletAddress
   );
+
+  if (getUserError) {
+    console.log(getUserError);
+  }
+
   if (userData) {
     return userData;
   }
   const { data: newUserData, error } = await supabase
-    .from("creators")
+    .from(TABLE_NAME)
     .insert([newUser])
     .select()
     .single();
@@ -31,24 +38,48 @@ async function createGetUser(newUser: User) {
   return newUserData;
 }
 
-async function updateUser(user: User, walletAddress: string) {
-  console.log(user, "user");
+async function updateUser(newUser: User, walletAddress: string) {
+  let ppPath;
+  let hasBaseUrl = false;
+  let ppName;
+  if (newUser.profilePicture instanceof File) {
+    console.log("?????", newUser.profilePicture);
+    ppName = `${Math.random()}-${newUser.profilePicture.name
+      .replaceAll("/", "")
+      .replaceAll(" ", "")}`;
+    ppPath = `${supabaseUrl}/storage/v1/object/public/profilePictures/${ppName}`;
+    console.log(ppPath, "a file?");
+  }
 
-  const { error } = await supabase
-    .from("users")
-    .update(user)
-    .eq("walletAddress", walletAddress);
+  if (newUser.profilePicture instanceof String) {
+    ppPath = newUser.profilePicture;
+    hasBaseUrl = true;
+    console.log(ppPath, "a string?");
+  }
+
+  const { data: user, error } = await supabase
+    .from(TABLE_NAME)
+    .update({ ...newUser, profilePicture: ppPath })
+    .eq("walletAddress", walletAddress)
+    .select("*")
+    .single();
 
   if (error) {
     throw new Error(`Error updating user: ${error.message}`);
   }
+
+  if (!hasBaseUrl) {
+    await uploadProfilePicture(newUser, ppName!);
+  }
+
+  return user;
 }
 
 async function getUserByWalletAddress(
   walletAddress: string
 ): Promise<{ user: User; error: PostgrestError | null }> {
   let { data: user, error } = await supabase
-    .from("users")
+    .from(TABLE_NAME)
     .select()
     .eq("walletAddress", walletAddress)
     .single();
@@ -56,19 +87,14 @@ async function getUserByWalletAddress(
   return { user, error };
 }
 
-async function getUserById(id: number): Promise<User> {
-  console.log("userId", id);
-  const { data: user, error } = await supabase
-    .from("users")
-    .select()
-    .eq("id", id)
-    .single();
+async function uploadProfilePicture(newUser: User, ppName: string) {
+  const { error: storageError } = await supabase.storage
+    .from("profilePictures")
+    .upload(ppName, newUser.profilePicture!);
 
-  if (error) {
-    throw new Error(`Error fetching user: ${error.message}`);
+  if (storageError) {
+    throw new Error("Error uploading profile picture ");
   }
-
-  return user;
 }
 
-export { createGetUser, updateUser, getUserByWalletAddress, getUserById };
+export { createGetUser, updateUser, getUserByWalletAddress };

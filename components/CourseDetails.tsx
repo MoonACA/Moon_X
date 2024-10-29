@@ -30,7 +30,7 @@ const CourseDetails = () => {
         </p>
 
         <div className="flex justify-between items-center max-md:flex-col gap-3 max-md:items-start">
-          <Creators creatorId={course?.creatorId} />
+          <Creators creatorAddress={course?.creatorAddress} />
           <Rating />
         </div>
 

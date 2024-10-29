@@ -3,7 +3,7 @@ import uppy from "./uppy";
 
 export interface Course {
   id?: number;
-  creatorId: number;
+  creatorAddress: string;
   title: string;
   description: string;
   thumbnail: File | string;
@@ -75,6 +75,19 @@ async function deleteCourse(id: number) {
   if (error) {
     throw new Error(`Error deleting course id: ${id}`);
   }
+}
+
+async function getUserCourses(walletAddress: string): Promise<Course[]> {
+  const { data: courses, error } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("creatorAddress", walletAddress);
+
+  if (error) {
+    throw new Error(`Error get user created courses: ${error}`);
+  }
+
+  return courses;
 }
 
 export { createCourse, getCourses, deleteCourse };

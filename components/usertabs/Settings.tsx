@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Switch from "@mui/material/Switch";
 import { FiUpload } from "react-icons/fi";
+import { useUser } from "@/hooks/user/useUser";
+import { useAccount } from "wagmi";
+import { User } from "@/services/apiUsers";
+import { useUpdateUser } from "@/hooks/user/useUpdateUser";
+import Image from "next/image";
 
 interface NotificationSettingProps {
   title: string;
@@ -46,17 +51,67 @@ const NotificationSetting: React.FC<NotificationSettingProps> = ({
 );
 
 const ProfileSettings: React.FC = () => {
+  const { address } = useAccount();
+  const { user, isPending, error } = useUser(address);
+  const [profilePicture, setProfilePicture] = useState<File>();
+  const [displayName, setDisplayName] = useState<string>();
+  const [bio, setBio] = useState<string>();
+  const [displayPic, setDisplayPic] = useState<string>();
+
+  const { updateUser, isPending: updatingUser } = useUpdateUser();
+
+  useEffect(() => {
+    if (typeof user?.profilePicture == "string") {
+      setDisplayPic(user?.profilePicture);
+    }
+    if (profilePicture) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        if (reader.result instanceof ArrayBuffer) return;
+        setDisplayPic(reader.result ? reader.result : undefined);
+      };
+      reader.readAsDataURL(profilePicture);
+    }
+  }, [user, profilePicture]);
+
+  async function handleUpdate() {
+    if (!address) throw new Error("Please connect your waller");
+    const updatedUser: User = {
+      walletAddress: address,
+    };
+
+    if (displayName) updatedUser["displayName"] = displayName;
+    if (bio) updatedUser["bio"] = bio;
+    if (profilePicture) updatedUser["profilePicture"] = profilePicture;
+
+    updateUser({ user: updatedUser, walletAddress: address });
+    console.log({ updatedUser });
+  }
+
   return (
     <div className="px-4 md:ml-4 mb-3 sm:mb-7">
       <div className="flex justify-start items-center">
         <div className="flex flex-col items-center">
-          <Avatar
-            sx={{
-              width: { xs: 80, sm: 140 }, // Avatar width for different screens
-              height: { xs: 80, sm: 120 }, // Avatar height for different screens
-            }}
-            variant="square"
-          />
+          <div>
+            {displayPic ? (
+              <Image
+                src={displayPic}
+                width={150}
+                height={50}
+                className="h-[130px]"
+                alt=""
+              />
+            ) : (
+              <Avatar
+                sx={{
+                  width: { xs: 80, sm: 140 }, // Avatar width for different screens
+                  height: { xs: 80, sm: 120 }, // Avatar height for different screens
+                }}
+                variant="square"
+              />
+            )}
+          </div>
           <label
             htmlFor="upload-photo"
             className="md:py-2 py-1 bg-gray-700 text-white text-xs text-center cursor-pointer flex items-center justify-center"
@@ -70,6 +125,7 @@ const ProfileSettings: React.FC = () => {
             type="file"
             id="upload-photo"
             style={{ display: "none" }} // Hide the input field
+            onChange={(e) => setProfilePicture(e.target.files?.[0])}
           />
           <span className="text-center text-white text-[7px] mt-2">
             Image Size should be under 1MB <br /> and Image ratio needs to be
@@ -84,8 +140,10 @@ const ProfileSettings: React.FC = () => {
             <input
               type="text"
               id="display-name"
+              defaultValue={user?.displayName}
               placeholder="Display name"
               className="w-full border border-white bg-none p-2"
+              onChange={(e) => setDisplayName(e.target.value)}
             />
             <div className="md:mt-2 mb-1">
               <label htmlFor="bio" className="text-white text-xs mb-1">
@@ -94,13 +152,18 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 id="bio"
+                defaultValue={user?.bio}
                 placeholder="Write your bio here..."
                 className="w-full border border-white bg-none p-2"
+                onChange={(e) => setBio(e.target.value)}
               />
             </div>
             <div className="mt-1 md:mt-2 md:mb-3">
-              <button className="py-2 px-2 text-white bg-orange-600">
-                Save Changes
+              <button
+                className="py-2 px-2 text-white bg-orange-600"
+                onClick={handleUpdate}
+              >
+                {updatingUser ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>
