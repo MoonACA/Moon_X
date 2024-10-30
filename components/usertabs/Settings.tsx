@@ -7,6 +7,7 @@ import { useAccount } from "wagmi";
 import { User } from "@/services/apiUsers";
 import { useUpdateUser } from "@/hooks/user/useUpdateUser";
 import Image from "next/image";
+import { useFileReader } from "@/hooks/useFileReader";
 
 interface NotificationSettingProps {
   title: string;
@@ -56,24 +57,15 @@ const ProfileSettings: React.FC = () => {
   const [profilePicture, setProfilePicture] = useState<File>();
   const [displayName, setDisplayName] = useState<string>();
   const [bio, setBio] = useState<string>();
-  const [displayPic, setDisplayPic] = useState<string>();
+  const [displayPic, setDisplayPic] = useState<string>("");
 
   const { updateUser, isPending: updatingUser } = useUpdateUser();
-
+  useFileReader(profilePicture, setDisplayPic);
   useEffect(() => {
     if (typeof user?.profilePicture == "string") {
       setDisplayPic(user?.profilePicture);
     }
-    if (profilePicture) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        if (reader.result instanceof ArrayBuffer) return;
-        setDisplayPic(reader.result ? reader.result : undefined);
-      };
-      reader.readAsDataURL(profilePicture);
-    }
-  }, [user, profilePicture]);
+  }, [user]);
 
   async function handleUpdate() {
     if (!address) throw new Error("Please connect your waller");

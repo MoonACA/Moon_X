@@ -15,6 +15,8 @@ import { useUppyState } from "@uppy/react";
 import uppy from "@/services/uppy";
 import { useUploadCourse } from "@/hooks/course/useUploadCourse";
 import { useUser } from "@/hooks/user/useUser";
+import { useFileReader } from "@/hooks/useFileReader";
+import Image from "next/image";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -22,45 +24,33 @@ const AddCourse = () => {
   const [value, setValue] = useState("");
   const [courseTitle, setCourseTitle] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
-  const [thumbnailFile, setThumbnailFile] = useState<File | string>();
+  const [thumbnailFile, setThumbnailFile] = useState<File>();
   const [videoFile, setVideoFile] = useState<File>();
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const { address } = useAccount();
-
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
+  const [videoName, setVideoName] = useState("");
   const totalProgress = useUppyState(uppy, (state) => state.totalProgress);
 
-  const [videoName, setVideoName] = useState("");
+  useFileReader(thumbnailFile, setThumbnailPreview);
+
   const {
     isCreating,
-    isPending,
+    isPending: signing,
     isSuccess,
     isError,
-    error: concError,
     createCourse,
     createdCourse,
   } = useCreateCourse(setOpenUploadModal);
 
   const { deleteCourse } = useDeleteCourse();
 
-  const { result } = useUploadCourse(createdCourse, videoFile, setVideoName);
+  useUploadCourse(createdCourse, videoFile, setVideoName, setVideoFile);
 
-  const {
-    user,
-    isPending: fetchingUser,
-    error: userFetchError,
-  } = useUser(address);
-
-  console.log({ user, userFetchError });
+  const { user } = useUser(address);
 
   useEffect(() => {
-    if (result[0]?.successful) {
-      uppy.clear();
-      setVideoFile(undefined);
-    }
-  }, [result]);
-
-  useEffect(() => {
-    if (isPending) return;
+    if (signing || isCreating) return;
     if (isSuccess) {
       console.log("create course contract call successful");
       toast.success("create course contract call successful");
@@ -73,14 +63,14 @@ const AddCourse = () => {
         deleteCourse(id);
       }
     }
-  }, [isSuccess, isError, createdCourse, deleteCourse, isPending]);
+  }, [isSuccess, isError, createdCourse, deleteCourse, signing, isCreating]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!address) return toast.error("wallet not connected");
     if (!user) return toast.error("user not found");
     if (!thumbnailFile || !videoFile)
-      return console.log("add a thumb nail and the course video");
+      return toast.error("add a thumb nail and the course video");
     setOpenUploadModal(true);
     const courseData: Course = {
       creatorAddress: address,
@@ -90,7 +80,6 @@ const AddCourse = () => {
       thumbnail: thumbnailFile,
       videoUrl: videoFile,
     };
-    console.log(courseData);
     createCourse({ newCourse: courseData, videoName });
   }
 
@@ -142,10 +131,23 @@ const AddCourse = () => {
             <label htmlFor="thumbnail" className=" flex flex-col gap-2">
               <p className=" text-sm text-white">Course Thumbnail</p>
               <div className=" flex items-end gap-5">
-                <FaRegImage
-                  className="bg-[#F5F7FA] p-[2rem] text-[10rem]"
-                  color="#B7BAC7"
-                />
+                <div>
+                  {thumbnailPreview ? (
+                    <Image
+                      src={thumbnailPreview}
+                      alt=""
+                      width={50}
+                      height={50}
+                      className="w-[150px] h-[150px]"
+                    />
+                  ) : (
+                    <FaRegImage
+                      className="bg-[#F5F7FA] p-[2rem] text-[10rem]"
+                      color="#B7BAC7"
+                    />
+                  )}
+                </div>
+
                 <div className=" w-[20rem]">
                   <p className=" text-[0.8rem] mb-[1rem] text-[#F5F7FA]">
                     Upload your course Thumbnail here. Important guidelines:
@@ -162,6 +164,7 @@ const AddCourse = () => {
               type="file"
               name="thumbnail"
               id="thumbnail"
+              accept="image/*"
               className=" hidden"
               onChange={(e) => setThumbnailFile(e.target.files?.[0])}
             />
@@ -215,7 +218,7 @@ const AddCourse = () => {
                 <progress max={100} value={totalProgress} />
               </div>
             ) : (
-              <BtnSubmit text={"Submit for Review"} />
+              <BtnSubmit text={signing ? "Signing...." : "Submit for Review"} />
             )}
           </div>
         </form>

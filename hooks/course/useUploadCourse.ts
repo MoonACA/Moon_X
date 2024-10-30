@@ -7,7 +7,8 @@ import { Course } from "@/services/apiCourses";
 function useUploadCourse(
   createdCourse: Course | undefined,
   videoFile: File | undefined,
-  setVideoName: Dispatch<SetStateAction<string>>
+  setVideoName: Dispatch<SetStateAction<string>>,
+  setVideoFile: Dispatch<SetStateAction<File | undefined>>
 ) {
   const errorUploading = useUppyState(uppy, (state) => state.error);
   const [files] = useUppyEvent(uppy, "file-added");
@@ -35,16 +36,23 @@ function useUploadCourse(
       ...singleFile.meta,
       ...supabaseMetadata,
     };
+    console.log(singleFile);
   }, [files]);
 
   useEffect(() => {
     if (!createdCourse) return;
     if (errorUploading) {
+      console.log(errorUploading);
       deleteCourse(createdCourse.id!);
     }
   }, [createdCourse, errorUploading, deleteCourse]);
 
-  return { result };
+  useEffect(() => {
+    uppy.on("upload-success", () => {
+      uppy.resetProgress();
+      setVideoFile(undefined);
+    });
+  }, [setVideoFile]);
 }
 
 export { useUploadCourse };
