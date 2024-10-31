@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
-import { IoCopy } from "react-icons/io5";
+import { IoCopy, IoCheckmarkSharp } from "react-icons/io5";
+import { useClipboard } from "@/hooks/useClipBoard";
 import {
   Table,
   TableBody,
@@ -16,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { useAccount } from "wagmi";
 
 import { FaEllipsisV } from "react-icons/fa";
 import { useCourses } from "@/hooks/course/useCourses";
@@ -157,6 +159,10 @@ export default function Admin() {
     setActiveTab(activeStatus);
   }, [activeStatus]);
 
+  const { address } = useAccount();
+
+  const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
+
   const handleClick = (event: any, row: any) => {
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
@@ -167,16 +173,7 @@ export default function Admin() {
   };
 
   const handleCopy = () => {
-    const textToCopy = "000x1234567890";
-    navigator.clipboard.writeText(textToCopy).then(
-      () => {
-        setCopySuccess("Copied!");
-        setTimeout(() => setCopySuccess(""), 2000); // Reset after 2 seconds
-      },
-      () => {
-        setCopySuccess("Failed to copy");
-      }
-    );
+    copyToClipboard(`${address}`);
   };
 
   const approveStatus = (status: boolean) => {
@@ -230,7 +227,7 @@ export default function Admin() {
                     <div className="mt-1">
                       <p className="text-white text-sm md:text-lg">Admin</p>
                       <p className="text-white md:text-sm text-xs gap-2">
-                        000x1234567890{" "}
+                        {truncateAddr(address)}
                         <span
                           className="inline-flex mr-1"
                           onClick={handleCopy}
