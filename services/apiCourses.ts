@@ -6,9 +6,17 @@ export interface Course {
   creatorAddress: string;
   title: string;
   description: string;
+  category?: string;
   thumbnail: File | string;
   fullText: string;
   videoUrl: File | string;
+  approved?: boolean;
+  created_at: string;
+  creators?: {
+    displayName: string | null;
+    fullName: string | null;
+    profifilePicture: string | null;
+  };
 }
 
 async function createCourse(
@@ -61,11 +69,26 @@ async function uploadThumbnail(
   }
 }
 
-async function getCourses() {
-  const { data: courses, error } = await supabase.from("courses").select("*");
+export type FilterType = {
+  field: string;
+  value: boolean;
+};
+
+async function getCourses(filter: FilterType | undefined): Promise<Course[]> {
+  let query = supabase
+    .from("courses")
+    .select("*, creators(fullName, displayName, profilePicture)");
+
+  if (filter) {
+    query = query.eq(filter.field, filter.value);
+  }
+
+  const { data: courses, error } = await query;
+
   if (error) {
     throw new Error(`Error fetching courses: ${error.message}`);
   }
+
   return courses;
 }
 

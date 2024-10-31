@@ -7,9 +7,7 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { useAccount } from "wagmi";
 import { Course } from "@/services/apiCourses";
-import { createGetUser, getUserByWalletAddress } from "@/services/apiUsers";
 import { useCreateCourse } from "@/hooks/course/useCreateCourse";
-import useDeleteCourse from "@/hooks/course/useDeleteCourse";
 import { toast } from "react-toastify";
 import { useUppyState } from "@uppy/react";
 import uppy from "@/services/uppy";
@@ -37,33 +35,13 @@ const AddCourse = () => {
   const {
     isCreating,
     isPending: signing,
-    isSuccess,
-    isError,
     createCourse,
     createdCourse,
   } = useCreateCourse(setOpenUploadModal);
 
-  const { deleteCourse } = useDeleteCourse();
-
   useUploadCourse(createdCourse, videoFile, setVideoName, setVideoFile);
 
   const { user } = useUser(address);
-
-  useEffect(() => {
-    if (signing || isCreating) return;
-    if (isSuccess) {
-      console.log("create course contract call successful");
-      toast.success("create course contract call successful");
-    }
-    if (isError) {
-      console.log("Created course", createdCourse, createdCourse?.id);
-      toast.error("create course contract call unsuccessful");
-      const id = createdCourse?.id;
-      if (id) {
-        deleteCourse(id);
-      }
-    }
-  }, [isSuccess, isError, createdCourse, deleteCourse, signing, isCreating]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
