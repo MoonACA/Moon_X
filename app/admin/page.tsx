@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Avatar } from "@mui/material";
-import { IoCopy } from "react-icons/io5";
+import { IoCopy, IoCheckmarkSharp } from "react-icons/io5";
+import { useClipboard } from "@/hooks/useClipBoard";
 import {
   Table,
   TableBody,
@@ -16,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { useAccount } from "wagmi";
 
 import { FaEllipsisV } from "react-icons/fa";
 
@@ -130,6 +132,8 @@ const rows = [
 export default function Admin() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
+  const { address } = useAccount();
+  const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
 
   const handleClick = (event: any, row: any) => {
     setAnchorEl(event.currentTarget);
@@ -141,18 +145,12 @@ export default function Admin() {
   };
 
   const [copySuccess, setCopySuccess] = useState("");
+  const shortenAddress = (addr: string) => {
+    return `${addr.slice(0, 6)}....${addr.slice(-4)}`;
+  };
 
   const handleCopy = () => {
-    const textToCopy = "000x1234567890";
-    navigator.clipboard.writeText(textToCopy).then(
-      () => {
-        setCopySuccess("Copied!");
-        setTimeout(() => setCopySuccess(""), 2000); // Reset after 2 seconds
-      },
-      () => {
-        setCopySuccess("Failed to copy");
-      }
-    );
+    copyToClipboard(`${address}`);
   };
   const [activeTab, setActiveTab] = useState("All Courses");
   const renderContent = () => {
@@ -168,52 +166,61 @@ export default function Admin() {
     }
   };
   return (
-    <div className=" bg-[#00122C] py-[10rem] ">
-      <div className="w-[80vw] mx-auto max-sm:w-[90vw]">
+    <div className=' bg-[#00122C] py-[10rem] '>
+      <div className='w-[80vw] mx-auto max-sm:w-[90vw]'>
         {/* card */}
-        <div className="bg-[#192A41]  border rounded-xl border-white">
-          <div className="p-[1rem] sm:p-[2rem]">
+        <div className='bg-[#192A41]  border rounded-xl border-white'>
+          <div className='p-[1rem] sm:p-[2rem]'>
             {/* for menu */}
-            <div className="flex items-center justify-between mb-3 sm:mb-7 ">
-              <div className="flex items-center justify-between mb-3 sm:mb-7 ">
-                <div className="flex gap-4">
+            <div className='flex items-center justify-between mb-3 sm:mb-7 '>
+              <div className='flex items-center justify-between mb-3 sm:mb-7 '>
+                <div className='flex gap-4'>
                   <Avatar
-                    alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    alt='Remy Sharp'
+                    src='/static/images/avatar/1.jpg'
                     sx={{
                       width: { xs: 40, sm: 56 }, // 40px width for mobile, 56px for larger screens
                       height: { xs: 40, sm: 56 }, // 40px height for mobile, 56px for larger screens
                       border: "2px solid white", // 2px white border
                     }}
                   />
-                  <div className="mt-1">
-                    <p className="text-white text-sm md:text-lg">Admin</p>
-                    <p className="text-white md:text-sm text-xs gap-2">
-                      000x1234567890{" "}
+                  <div className='mt-1'>
+                    <p className='text-white text-sm md:text-lg'>Admin</p>
+                    <p className='text-white md:text-sm text-xs gap-2'>
+                      {address ? shortenAddress(address) : "0x...."}
                       <span
-                        className="inline-flex mr-1"
+                        className='inline-flex mr-1'
                         onClick={handleCopy}
                         style={{ cursor: "pointer" }}
                       >
-                        {" "}
-                        <IoCopy
-                          style={{
-                            color: "transparent", // Makes the inside of the icon transparent
-                            stroke: "white", // Changes the outline color to white
-                            strokeWidth: "30",
-                          }}
-                        />{" "}
+                        {hasCopiedKey ? (
+                          <IoCheckmarkSharp
+                            style={{
+                              color: "transparent", // Makes the inside of the icon transparent
+                              stroke: "white", // Changes the outline color to white
+                              strokeWidth: "30",
+                            }}
+                          />
+                        ) : (
+                          <IoCopy
+                            style={{
+                              color: "transparent", // Makes the inside of the icon transparent
+                              stroke: "white", // Changes the outline color to white
+                              strokeWidth: "30",
+                            }}
+                          />
+                        )}
                       </span>
-                      {copySuccess && (
-                        <span className="ml-2">{copySuccess}</span>
-                      )}
+                      {/* {copySuccess && (
+                        <span className='ml-2'>{copySuccess}</span>
+                      )} */}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
             {/* for tab */}
-            <div className="flex items-center justify-between gap-2 md:gap-0">
+            <div className='flex items-center justify-between gap-2 md:gap-0'>
               <div>
                 <button
                   onClick={() => setActiveTab("All Courses")}
@@ -278,9 +285,9 @@ export default function Admin() {
                 </button>
               </div>
             </div>
-            <hr className="bg-white h-[2px] md:-ml-7 md:-mr-7 mt-2 mb-3 sm:mb-7" />
+            <hr className='bg-white h-[2px] md:-ml-7 md:-mr-7 mt-2 mb-3 sm:mb-7' />
             {/* table */}
-            <div className="mt-4">
+            <div className='mt-4'>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
@@ -311,10 +318,10 @@ export default function Admin() {
                               alt={row.Instructor.name}
                             />
                             <div style={{ marginLeft: "8px" }}>
-                              <Typography variant="body1">
+                              <Typography variant='body1'>
                                 {row.Instructor.name}
                               </Typography>
-                              <Typography variant="body2" color="textSecondary">
+                              <Typography variant='body2' color='textSecondary'>
                                 {row.Instructor.handle}
                               </Typography>
                             </div>
@@ -342,7 +349,7 @@ export default function Admin() {
                               }}
                             />
                             <Typography
-                              variant="body2"
+                              variant='body2'
                               style={{
                                 color:
                                   row.status === "active"
@@ -357,14 +364,14 @@ export default function Admin() {
                         </TableCell>
                         <TableCell>
                           <IconButton
-                            aria-controls="simple-menu"
-                            aria-haspopup="true"
+                            aria-controls='simple-menu'
+                            aria-haspopup='true'
                             onClick={(event) => handleClick(event, row)}
                           >
                             <FaEllipsisV />
                           </IconButton>
                           <Menu
-                            id="simple-menu"
+                            id='simple-menu'
                             anchorEl={anchorEl}
                             keepMounted
                             open={Boolean(anchorEl) && selectedRow === row}
