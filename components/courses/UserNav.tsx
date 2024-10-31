@@ -88,10 +88,10 @@ const UserNav: React.FC = () => {
               )}
             </div>
             <div
-              className='bg-[#021128] px-2 flex items-center justify-center cursor-pointer'
+              className=' px-2 flex items-center justify-center cursor-pointer'
               onClick={copyToClipboard}
             >
-              <p className='bg-[#021128] rounded-lg p-[0.3rem] text-sm'>
+              <p className=' rounded-lg p-[0.3rem] text-sm'>
                 {address ? shortenAddress(address) : "0x...."}
               </p>
               <div className='inline-flex'>
