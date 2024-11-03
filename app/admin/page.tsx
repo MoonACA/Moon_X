@@ -17,12 +17,15 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 
 import { FaEllipsisV } from "react-icons/fa";
 import { useCourses } from "@/hooks/course/useCourses";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { truncateAddr } from "@/utils/helpers";
+import { useUpdateCourse } from "@/hooks/course/useUpdateCourse";
+import { writeToContract } from "@/services/moonXContract";
+import { toast } from "react-toastify";
 
 const rows = [
   {
@@ -135,6 +138,7 @@ const rows = [
 export default function Admin() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedId, setSelectedId] = useState<number>();
   const pathName = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -160,8 +164,17 @@ export default function Admin() {
   }, [activeStatus]);
 
   const { address } = useAccount();
-
+  const { writeContract, error } = useWriteContract();
   const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
+
+  const { updateCourse, updatingCourse } = useUpdateCourse();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+      updateCourse({ id: selectedId!, updates: { approved: false } });
+    }
+  }, [error, selectedId, updateCourse]);
 
   const handleClick = (event: any, row: any) => {
     setAnchorEl(event.currentTarget);
@@ -188,6 +201,23 @@ export default function Admin() {
     const localeTime = new Date(date).toLocaleTimeString();
 
     return { dateString, localeTime };
+  };
+
+  const handleApprovingCourse = async (
+    courseId: number,
+    contractId: number
+  ) => {
+    setSelectedId(courseId);
+    updateCourse(
+      { id: courseId, updates: { approved: true } },
+      {
+        onSuccess: () => toast.success("Course successfully updated"),
+      }
+    );
+    writeToContract(writeContract, {
+      functionName: "approveCourse",
+      args: [contractId],
+    });
   };
 
   const renderContent = () => {
@@ -430,11 +460,24 @@ export default function Admin() {
                               open={Boolean(anchorEl) && selectedRow === row}
                               onClose={handleClose}
                             >
-                              <MenuItem onClick={handleClose}>
+                              <MenuItem
+                                onClick={handleClose}
+                                onClickCapture={() =>
+                                  router.push(`/courses/${row.id}`)
+                                }
+                              >
                                 View Course
                               </MenuItem>
                               {!row.approved && (
-                                <MenuItem onClick={handleClose}>
+                                <MenuItem
+                                  onClick={handleClose}
+                                  onClickCapture={() =>
+                                    handleApprovingCourse(
+                                      row.id!,
+                                      row.contractId
+                                    )
+                                  }
+                                >
                                   Approve Course
                                 </MenuItem>
                               )}

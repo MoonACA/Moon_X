@@ -22,4 +22,4 @@ function writeToContract(
   });
 }
 
-export { writeToContract };
+export { writeToContract, moonXContractAddress };

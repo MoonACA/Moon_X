@@ -6,12 +6,13 @@ export interface Course {
   creatorAddress: string;
   title: string;
   description: string;
+  contractId: number;
   category?: string;
   thumbnail: File | string;
   fullText: string;
   videoUrl: File | string;
   approved?: boolean;
-  created_at: string;
+  created_at?: string;
   creators?: {
     displayName: string | null;
     fullName: string | null;
@@ -92,14 +93,6 @@ async function getCourses(filter: FilterType | undefined): Promise<Course[]> {
   return courses;
 }
 
-async function deleteCourse(id: number) {
-  const { error } = await supabase.from("courses").delete().eq("id", id);
-
-  if (error) {
-    throw new Error(`Error deleting course id: ${id}`);
-  }
-}
-
 async function getUserCourses(walletAddress: string): Promise<Course[]> {
   const { data: courses, error } = await supabase
     .from("courses")
@@ -113,4 +106,20 @@ async function getUserCourses(walletAddress: string): Promise<Course[]> {
   return courses;
 }
 
-export { createCourse, getCourses, deleteCourse };
+async function deleteCourse(id: number) {
+  const { error } = await supabase.from("courses").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(`Error deleting course id: ${id}`);
+  }
+}
+
+async function updateCourse(id: number, updates: {}) {
+  const { error } = await supabase.from("courses").update(updates).eq("id", id);
+
+  if (error) {
+    throw new Error(`Error updating course id: ${id}`);
+  }
+}
+
+export { createCourse, getCourses, deleteCourse, updateCourse };

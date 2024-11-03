@@ -3,6 +3,7 @@ import { useUppyEvent, useUppyState } from "@uppy/react";
 import uppy from "@/services/uppy";
 import useDeleteCourse from "./useDeleteCourse";
 import { Course } from "@/services/apiCourses";
+import { useWriteContract } from "wagmi";
 
 function useUploadCourse(
   createdCourse: Course | undefined,
@@ -14,6 +15,8 @@ function useUploadCourse(
   const [files] = useUppyEvent(uppy, "file-added");
   const [result] = useUppyEvent(uppy, "complete");
   const { deleteCourse } = useDeleteCourse();
+
+  const { isPending } = useWriteContract();
 
   useEffect(() => {
     if (!videoFile) return;
@@ -49,10 +52,11 @@ function useUploadCourse(
 
   useEffect(() => {
     uppy.on("upload-success", () => {
-      uppy.resetProgress();
-      setVideoFile(undefined);
+      if (isPending) {
+        uppy.resetProgress();
+      }
     });
-  }, [setVideoFile]);
+  }, [setVideoFile, isPending]);
 }
 
 export { useUploadCourse };

@@ -15,6 +15,7 @@ import { useUploadCourse } from "@/hooks/course/useUploadCourse";
 import { useUser } from "@/hooks/user/useUser";
 import { useFileReader } from "@/hooks/useFileReader";
 import Image from "next/image";
+import { useContract } from "@/hooks/useContract";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -42,14 +43,23 @@ const AddCourse = () => {
   useUploadCourse(createdCourse, videoFile, setVideoName, setVideoFile);
 
   const { user } = useUser(address);
-
+  const { refetch, isError } = useContract("courseCount");
+  console.log(user);
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!address) return toast.error("wallet not connected");
     if (!user) return toast.error("user not found");
+
     if (!thumbnailFile || !videoFile)
       return toast.error("add a thumb nail and the course video");
+
     setOpenUploadModal(true);
+
+    const resp = await refetch();
+    const courseCount = resp.data;
+
+    if (isError) return toast.error("Error creating course");
+
     const courseData: Course = {
       creatorAddress: address,
       title: courseTitle,
@@ -57,6 +67,7 @@ const AddCourse = () => {
       description: courseDescription,
       thumbnail: thumbnailFile,
       videoUrl: videoFile,
+      contractId: Number(courseCount) + 1,
     };
     createCourse({ newCourse: courseData, videoName });
   }

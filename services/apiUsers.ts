@@ -43,18 +43,15 @@ async function updateUser(newUser: User, walletAddress: string) {
   let hasBaseUrl = false;
   let ppName;
   if (newUser.profilePicture instanceof File) {
-    console.log("?????", newUser.profilePicture);
     ppName = `${Math.random()}-${newUser.profilePicture.name
       .replaceAll("/", "")
       .replaceAll(" ", "")}`;
     ppPath = `${supabaseUrl}/storage/v1/object/public/profilePictures/${ppName}`;
-    console.log(ppPath, "a file?");
   }
 
   if (newUser.profilePicture instanceof String) {
     ppPath = newUser.profilePicture;
     hasBaseUrl = true;
-    console.log(ppPath, "a string?");
   }
 
   const { data: user, error } = await supabase
@@ -83,7 +80,6 @@ async function getUserByWalletAddress(
     .select()
     .eq("walletAddress", walletAddress)
     .single();
-
   return { user, error };
 }
 
