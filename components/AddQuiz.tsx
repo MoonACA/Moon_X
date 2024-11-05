@@ -51,7 +51,7 @@ const AddQuiz = () => {
 
   const handleQuestionChange = (id: number, value: string) => {
     const newQuestions = questions.map((question, index) =>
-      index === id ? { ...question, question: value } : question
+      index == id ? { ...question, question: value } : question
     );
     setQuestions(newQuestions);
   };
@@ -62,9 +62,9 @@ const AddQuiz = () => {
     value: string
   ) => {
     const newQuizes = questions.map((question, index) => {
-      if (index === questionIndex) {
+      if (index == questionIndex) {
         const options = question.options.map((op: any, i: number) =>
-          i === optionIndex ? value : op
+          i == optionIndex ? value : op
         );
 
         return { ...question, options };
@@ -76,7 +76,7 @@ const AddQuiz = () => {
 
   const handleAnswerChange = (index: number, value: string) => {
     const newQuestions = questions.map((question, i) =>
-      i === index ? { ...question, answer: value } : question
+      i == index ? { ...question, answer: value } : question
     );
     setQuestions(newQuestions);
   };
