@@ -7,7 +7,7 @@ export type OptionType = {
   D: string;
 };
 
-type CorrectAnswerType = keyof OptionType;
+export type CorrectAnswerType = keyof OptionType;
 
 export interface Quiz extends OptionType {
   id?: number;
