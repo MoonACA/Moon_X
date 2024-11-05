@@ -26,9 +26,6 @@ const AddQuiz = () => {
     if (!address) return toast.error("wallet not connected");
     if (!course) return toast.error(`Failed to fetch course #${courseId}`);
 
-    if (!courseId)
-      return toast.error("trying to submit outside the course route");
-
     if (course.quizAvailable)
       return toast.success("Quiz has been added for this course");
 
