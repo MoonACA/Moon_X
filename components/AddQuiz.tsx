@@ -12,22 +12,26 @@ const AddQuiz = () => {
   const [questions, setQuestions] = useState(
     Array(5).fill({ question: "", options: ["", "", "", ""], answer: "A" })
   );
+  const [refetchstatus, setRefetchStatus] = useState(false);
   const { course: courseId } = useParams();
-
   const { address } = useAccount();
 
   const { createQuiz, isPending: isCreating } = useCreateQuiz();
   const { course, isPending: isLoading } = useCourse(Number(courseId));
-  const { updatingCourse } = useUpdateCourse();
+  const { updatingCourse } = useUpdateCourse(setRefetchStatus);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    //if (!address) return toast.error("wallet not connected");
+
+    if (!address) return toast.error("wallet not connected");
     if (!course) return toast.error(`Failed to fetch course #${courseId}`);
+
     if (!courseId)
       return toast.error("trying to submit outside the course route");
+
     if (course.quizAvailable)
       return toast.success("Quiz has been added for this course");
+
     const quizes: Quiz[] = questions.map((question, index) => {
       const newObj: Quiz = {
         question: question.question,
@@ -133,13 +137,15 @@ const AddQuiz = () => {
 
           <BtnSubmit
             text={
-              !isCreating && !isLoading && !updatingCourse ? (
+              !isCreating && !isLoading && !updatingCourse && !refetchstatus ? (
                 "Submit Quiz Questions"
               ) : (
                 <ClipLoader color="#fff" size={20} />
               )
             }
-            disabled={isCreating || updatingCourse || isLoading}
+            disabled={
+              isCreating || updatingCourse || isLoading || refetchstatus
+            }
           />
         </div>
       </form>
