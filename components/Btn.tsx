@@ -4,6 +4,7 @@ import { IoSend } from "react-icons/io5";
 interface Text {
   text: string | ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export const BtnPrimaryFull: React.FC<Text> = ({ text }) => {
@@ -47,12 +48,13 @@ export const BtnPrimary: React.FC<Text> = ({ text }) => {
   );
 };
 
-export const BtnSubmit: React.FC<Text> = ({ text }) => {
+export const BtnSubmit: React.FC<Text> = ({ text, disabled }) => {
   return (
     <div>
       <button
         className=" text-center bg-[#FF6636] py-[0.5rem] px-[1rem] font-medium text-sm flex gap-2 items-center text-white"
         type="submit"
+        disabled={disabled}
       >
         {text}
       </button>

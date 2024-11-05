@@ -12,6 +12,7 @@ export interface Course {
   fullText: string;
   videoUrl: File | string;
   approved?: boolean;
+  quizAvailable?: boolean;
   created_at?: string;
   creators?: {
     displayName: string | null;
@@ -93,6 +94,20 @@ async function getCourses(filter: FilterType | undefined): Promise<Course[]> {
   return courses;
 }
 
+async function getCourseById(id: number): Promise<Course> {
+  const { data: course, error } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    throw new Error(`Error fetching course #${id}: ${error.message}`);
+  }
+
+  return course;
+}
+
 async function getUserCourses(walletAddress: string): Promise<Course[]> {
   const { data: courses, error } = await supabase
     .from("courses")
@@ -122,4 +137,4 @@ async function updateCourse(id: number, updates: {}) {
   }
 }
 
-export { createCourse, getCourses, deleteCourse, updateCourse };
+export { createCourse, getCourses, getCourseById, deleteCourse, updateCourse };

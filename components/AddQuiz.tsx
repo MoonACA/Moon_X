@@ -4,24 +4,34 @@ import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import { CorrectAnswerType, Quiz } from "@/services/apiQuiz";
-
+import { useCreateQuiz } from "@/hooks/quiz/useCreateQuiz";
+import { useCourse } from "@/hooks/course/useCourse";
+import { ClipLoader } from "react-spinners";
+import { useUpdateCourse } from "@/hooks/course/useUpdateCourse";
 const AddQuiz = () => {
   const [questions, setQuestions] = useState(
     Array(5).fill({ question: "", options: ["", "", "", ""], answer: "A" })
   );
-  const { course } = useParams();
+  const { course: courseId } = useParams();
 
   const { address } = useAccount();
 
-  const isCreating = false;
+  const { createQuiz, isPending: isCreating } = useCreateQuiz();
+  const { course, isPending: isLoading } = useCourse(Number(courseId));
+  const { updatingCourse } = useUpdateCourse();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!address) return toast.error("wallet not connected");
+    //if (!address) return toast.error("wallet not connected");
+    if (!course) return toast.error(`Failed to fetch course #${courseId}`);
+    if (!courseId)
+      return toast.error("trying to submit outside the course route");
+    if (course.quizAvailable)
+      return toast.success("Quiz has been added for this course");
     const quizes: Quiz[] = questions.map((question, index) => {
       const newObj: Quiz = {
         question: question.question,
-        courseId: Number(course),
+        courseId: Number(courseId),
         A: question.options[0],
         B: question.options[1],
         C: question.options[2],
@@ -32,7 +42,7 @@ const AddQuiz = () => {
       return newObj;
     });
 
-    console.log(quizes);
+    createQuiz(quizes);
   }
 
   const handleQuestionChange = (id: number, value: string) => {
@@ -120,13 +130,17 @@ const AddQuiz = () => {
 
         <div className="flex items-center justify-between mt-[1rem]">
           <BtnCancel text="Cancel" />
-          {isCreating ? (
-            <div className="w-52 mb-5 rounded-lg text-white text-center">
-              <p className="text-sm z-50">Creating...</p>
-            </div>
-          ) : (
-            <BtnSubmit text="Submit Quiz Questions" />
-          )}
+
+          <BtnSubmit
+            text={
+              !isCreating && !isLoading && !updatingCourse ? (
+                "Submit Quiz Questions"
+              ) : (
+                <ClipLoader color="#fff" size={20} />
+              )
+            }
+            disabled={isCreating || updatingCourse || isLoading}
+          />
         </div>
       </form>
     </div>

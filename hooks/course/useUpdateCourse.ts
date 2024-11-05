@@ -10,7 +10,7 @@ export function useUpdateCourse() {
       updateCourseApi(id, updates),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["courses"] });
+      queryClient.invalidateQueries();
     },
 
     onError: (error) => toast.error(error.message),
