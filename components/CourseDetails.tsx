@@ -15,7 +15,9 @@ const CourseDetails = () => {
   const { courses, isLoading, error } = useCourses();
   const course = courses?.find((data) => data.id == Number(courseId));
 
-  const safeLecture = DOMPurify.sanitize(course?.fullText);
+  if (!course) return null;
+
+  const safeLecture = DOMPurify.sanitize(course.fullText);
 
   return (
     <div>
@@ -23,20 +25,20 @@ const CourseDetails = () => {
       <div className=" p-[1rem] border border-white rounded-2xl mt-[1rem] bg-[#192A41]">
         <BreadCrumbs text="Development" />
 
-        <CourseTop text={course?.title} />
+        <CourseTop text={course.title} />
 
         <p className=" text-sm text-[#aaaaaa] max-sm:text-[0.8rem]">
-          {course?.description}
+          {course.description}
         </p>
 
         <div className="flex justify-between items-center max-md:flex-col gap-3 max-md:items-start">
-          <Creators creatorAddress={course?.creatorAddress} />
+          <Creators creatorAddress={course.creatorAddress} />
           <Rating />
         </div>
 
         <div className=" relative w-full h-[20rem] my-[1rem]">
           <iframe
-            src={course?.videoUrl}
+            src={String(course.videoUrl) || ""}
             frameBorder={"0"}
             width={"100%"}
             height={"100%"}
