@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import { NextResponse } from "next/server";
-import supabase from "@/supabase";
+import supabase from "@/services/supabase";
 import abi from "@/abi/credScoreContractAbi.json";
 
 // Define the type for the request body
