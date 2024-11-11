@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = "https://bakurgmtpedjcnadobmy.supabase.co";
 
-const supabaseKey: string | undefined = process.env.SUPABASE_KEY;
+const supabaseKey = process.env.SUPABASE_KEY || "";
 
 if (!supabaseKey) {
   throw new Error("Supabase key is missing.");
