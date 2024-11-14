@@ -1,31 +1,33 @@
-import React, { FormEvent, useState } from "react";
-import { BtnCancel, BtnSubmit } from "./Btn";
-import { useAccount } from "wagmi";
-import { toast } from "react-toastify";
+"use client";
+
+import { createQuizAction } from "@/services/actions";
+import { Course } from "@/services/apiCourses";
+import { Quiz } from "@/services/apiQuiz";
 import { useParams } from "next/navigation";
-import { CorrectAnswerType, Quiz } from "@/services/apiQuiz";
-import { useCreateQuiz } from "@/hooks/quiz/useCreateQuiz";
-import { useCourse } from "@/hooks/course/useCourse";
+import { FormEvent, useState, useTransition } from "react";
 import { ClipLoader } from "react-spinners";
-import { useUpdateCourse } from "@/hooks/course/useUpdateCourse";
-const AddQuiz = () => {
+import { toast } from "react-toastify";
+import { useAccount } from "wagmi";
+import { BtnCancel, BtnSubmit } from "./Btn";
+
+const AddQuiz = ({ course }: { course: Course }) => {
   const [questions, setQuestions] = useState(
     Array(5).fill({ question: "", options: ["", "", "", ""], answer: "A" })
   );
-  const [refetchstatus, setRefetchStatus] = useState(false);
-  const { course: courseId } = useParams();
-  const { address } = useAccount();
 
-  const { createQuiz, isPending: isCreating } = useCreateQuiz();
-  const { course, isPending: isLoading } = useCourse(Number(courseId));
-  const { updatingCourse } = useUpdateCourse(setRefetchStatus);
+  const [isCreating, startTransition] = useTransition();
+
+  const { course: courseId } = useParams();
+
+  const { address } = useAccount();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!address) return toast.error("wallet not connected");
     if (!course) return toast.error(`Failed to fetch course #${courseId}`);
-
+    if (!course.approved)
+      return toast.error("Cannot add quiz to an unapproved course");
     if (course.quizAvailable)
       return toast.success("Quiz has been added for this course");
 
@@ -43,7 +45,13 @@ const AddQuiz = () => {
       return newObj;
     });
 
-    createQuiz(quizes);
+    startTransition(() =>
+      createQuizAction(JSON.stringify(quizes), String(courseId), address).then(
+        () => {
+          toast.success("Quiz successfully created");
+        }
+      )
+    );
   }
 
   const handleQuestionChange = (id: number, value: string) => {
@@ -134,15 +142,13 @@ const AddQuiz = () => {
 
           <BtnSubmit
             text={
-              !isCreating && !isLoading && !updatingCourse && !refetchstatus ? (
+              !isCreating ? (
                 "Submit Quiz Questions"
               ) : (
                 <ClipLoader color="#fff" size={20} />
               )
             }
-            disabled={
-              isCreating || updatingCourse || isLoading || refetchstatus
-            }
+            disabled={isCreating}
           />
         </div>
       </form>

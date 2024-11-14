@@ -1,36 +1,41 @@
 import supabase, { supabaseUrl } from "./supabase";
 import uppy from "./uppy";
 
-export interface Course {
-  id?: number;
+export interface ICourse {
   creatorAddress: string;
   title: string;
   description: string;
   contractId: number;
   category?: string;
+  thumbnail: File;
+  fullText: string;
+  video: File;
+}
+
+export type Course = {
+  id: number;
+  creatorAddress: string;
+  title: string;
+  description: string;
+  contractId: number;
+  category: string;
   thumbnail: File | string;
   fullText: string;
-  videoUrl: File | string;
-  approved?: boolean;
-  quizAvailable?: boolean;
-  created_at?: string;
-  creators?: {
+  video: string;
+  approved: boolean;
+  quizAvailable: boolean;
+  created_at: string;
+  creators: {
     displayName: string | null;
     fullName: string | null;
     profifilePicture: string | null;
   };
-}
+};
 
 async function createCourse(
-  newCourse: Course,
+  newCourse: ICourse,
   videoName: string
 ): Promise<Course> {
-  if (
-    typeof newCourse.videoUrl == "string" ||
-    typeof newCourse.thumbnail == "string"
-  )
-    throw new Error("video must be of type File");
-
   const videoPath = `${supabaseUrl}/storage/v1/object/public/videos/${videoName}`;
 
   const thumbnailName = `${Math.random()}-${newCourse.thumbnail.name}`
@@ -41,23 +46,24 @@ async function createCourse(
 
   const { data: course, error } = await supabase
     .from("courses")
-    .insert([{ ...newCourse, videoUrl: videoPath, thumbnail: thumbnailPath }])
+    .insert([{ ...newCourse, video: videoPath, thumbnail: thumbnailPath }])
     .select()
     .single();
 
   if (error) {
-    throw new Error("Error creating course");
+    await supabase.storage
+      .from(process.env.SUPABASE_BUCKET_ID || "")
+      .remove([videoName]);
+    throw new Error(`Error creating course: ${error.message}`);
   }
 
   await uploadThumbnail(newCourse, course, thumbnailName);
-
-  await uppy.upload(); // upload video
 
   return course;
 }
 
 async function uploadThumbnail(
-  newCourse: Course,
+  newCourse: ICourse,
   course: Course,
   thumbnailName: string
 ) {
@@ -75,8 +81,9 @@ export type FilterType = {
   field: string;
   value: boolean;
 };
-
-async function getCourses(filter: FilterType | undefined): Promise<Course[]> {
+const sleep = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time));
+async function getCourses(filter?: FilterType): Promise<Course[]> {
   let query = supabase
     .from("courses")
     .select("*, creators(fullName, displayName, profilePicture)");

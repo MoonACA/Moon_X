@@ -1,6 +1,5 @@
-'use client';
-import AddCourse from '@/components/AddCourse';
-import React from 'react';
+import AddCourse from "@/components/AddCourse";
+import React from "react";
 
 const Add = () => {
   return (

@@ -5,7 +5,7 @@ export interface User {
   id?: number;
   walletAddress: string;
   fullName?: string;
-  profilePicture?: string | File;
+  profilePicture?: string | File | Blob;
   displayName?: string;
   bio?: string;
 }
@@ -38,7 +38,7 @@ async function createGetUser(newUser: User): Promise<User> {
   return newUserData;
 }
 
-async function updateUser(newUser: User, walletAddress: string) {
+async function updateUser(newUser: User) {
   let ppPath;
   let hasBaseUrl = false;
   let ppName;
@@ -57,7 +57,7 @@ async function updateUser(newUser: User, walletAddress: string) {
   const { data: user, error } = await supabase
     .from(TABLE_NAME)
     .update({ ...newUser, profilePicture: ppPath })
-    .eq("walletAddress", walletAddress)
+    .eq("walletAddress", newUser.walletAddress)
     .select("*")
     .single();
 

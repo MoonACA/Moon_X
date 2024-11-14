@@ -1,16 +1,14 @@
-"use client";
-
 import one from "@/public/assets/creator1.png";
 import Image from "next/image";
-import { useUser } from "@/hooks/user/useUser";
 import { truncateAddr } from "@/utils/helpers";
+import { getUserByWalletAddress } from "@/services/apiUsers";
 
 type CreatorType = {
   creatorAddress: string;
 };
 
-const Creators = ({ creatorAddress }: CreatorType) => {
-  const { user: userData } = useUser(creatorAddress);
+const Creators = async ({ creatorAddress }: CreatorType) => {
+  const { user: userData } = await getUserByWalletAddress(creatorAddress);
 
   const truncatedAddress = truncateAddr(userData?.walletAddress) || "";
 

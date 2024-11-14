@@ -1,81 +1,131 @@
 "use client";
-import React, { FormEvent, useEffect, useState } from "react";
+import { useContract } from "@/hooks/useContract";
+import { useFileReader } from "@/hooks/useFileReader";
+import { createCourseAction, deleteCourseAction } from "@/services/actions";
+import { Course } from "@/services/apiCourses";
+import { uploadToIpfs } from "@/services/ipfs";
+import { writeToContract } from "@/services/moonXContract";
+import { fileToBlob } from "@/utils/helpers";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineFileUpload } from "react-icons/md";
-import { BtnCancel, BtnSubmit } from "./Btn";
-import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { useAccount } from "wagmi";
-import { Course } from "@/services/apiCourses";
-import { useCreateCourse } from "@/hooks/course/useCreateCourse";
+import { BarLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import { useUppyState } from "@uppy/react";
-import uppy from "@/services/uppy";
-import { useUploadCourse } from "@/hooks/course/useUploadCourse";
-import { useUser } from "@/hooks/user/useUser";
-import { useFileReader } from "@/hooks/useFileReader";
-import Image from "next/image";
-import { useContract } from "@/hooks/useContract";
+import { useAccount, useWriteContract } from "wagmi";
+import { BtnCancel, BtnSubmit } from "./Btn";
+
+type InputType = {
+  title: string;
+  description: string;
+  notes: string;
+  video: FileList;
+  thumbnail: FileList;
+};
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const AddCourse = () => {
-  const [value, setValue] = useState("");
-  const [courseTitle, setCourseTitle] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
-  const [thumbnailFile, setThumbnailFile] = useState<File>();
-  const [videoFile, setVideoFile] = useState<File>();
-  const [openUploadModal, setOpenUploadModal] = useState(false);
-  const { address } = useAccount();
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
-  const [videoName, setVideoName] = useState("");
-  const totalProgress = useUppyState(uppy, (state) => state.totalProgress);
+
+  const [isCreating, setIsCreating] = useState(false);
+
+  const [signing, setSigning] = useState(false);
+
+  const [createdCourse, setCreatedCourse] = useState<Course>();
+
+  const { address } = useAccount();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<InputType>();
+
+  const thumbnailFiles = watch("thumbnail");
+
+  const videoFiles = watch("video");
+
+  const thumbnailFile =
+    thumbnailFiles?.length > 0 ? thumbnailFiles[0] : undefined;
+  const videoFile = videoFiles?.length > 0 ? videoFiles[0] : undefined;
 
   useFileReader(thumbnailFile, setThumbnailPreview);
 
-  const {
-    isCreating,
-    isPending: signing,
-    createCourse,
-    createdCourse,
-  } = useCreateCourse(setOpenUploadModal);
+  const { writeContract, error: contractError, isSuccess } = useWriteContract();
 
-  useUploadCourse(createdCourse, videoFile, setVideoName, setVideoFile);
-
-  const { user } = useUser(address);
   const { refetch, isError } = useContract("courseCount");
-  console.log(user);
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+
+  useEffect(() => {
+    if (isSuccess) setSigning(false);
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (!createdCourse) return;
+    if (!contractError) return;
+    setSigning(false);
+    // delete course when contract execution fails
+    deleteCourseAction(String(createdCourse.id), address!);
+  }, [contractError, createdCourse, address]);
+
+  const onSubmit: SubmitHandler<InputType> = async (data) => {
     if (!address) return toast.error("wallet not connected");
-    if (!user) return toast.error("user not found");
-
-    if (!thumbnailFile || !videoFile)
-      return toast.error("add a thumb nail and the course video");
-
-    setOpenUploadModal(true);
-
+    console.log(data);
     const resp = await refetch();
     const courseCount = resp.data;
 
     if (isError) return toast.error("Error creating course");
+    setIsCreating(true);
+    setCreatedCourse(undefined);
+    const formData = new FormData();
 
-    const courseData: Course = {
-      creatorAddress: address,
-      title: courseTitle,
-      fullText: value,
-      description: courseDescription,
-      thumbnail: thumbnailFile,
-      videoUrl: videoFile,
-      contractId: Number(courseCount) + 1,
-    };
-    createCourse({ newCourse: courseData, videoName });
+    for (const i of Object.entries(data)) {
+      if (typeof i[1] == "object") {
+        const blob = (await fileToBlob(i[1][0])) as Blob;
+        formData.set(i[0], blob, i[1][0].name);
+      } else {
+        formData.set(i[0], String(i[1]));
+      }
+    }
+
+    formData.set("creatorAddress", address);
+    formData.set("contractId", String(Number(courseCount) + 1));
+
+    const videoName = `${Math.random()}-${data.video[0].name}`;
+
+    try {
+      const created = await createCourseAction(formData, videoName);
+      setCreatedCourse(created);
+      console.log({ created });
+      setIsCreating(false);
+      setSigning(true);
+      await writeCourseToContract(created);
+    } catch (error) {
+      console.log(error);
+      setIsCreating(false);
+      setSigning(false);
+    }
+  };
+
+  async function writeCourseToContract(createdCourse: Course) {
+    const ipfsHash = await uploadToIpfs(createdCourse);
+    const uri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
+    writeToContract(writeContract, {
+      args: [uri],
+      functionName: "createCourse",
+      value: "0.75",
+    });
   }
 
   return (
     <div className=" bg-[#192A41] p-[1rem] rounded-xl border border-white">
       <div className="">
-        <form action="" onSubmit={(e) => handleSubmit(e)}>
+        <form action="" onSubmit={handleSubmit(onSubmit)}>
           <div className="">
             <div className="w-full">
               <label htmlFor="title" className="block text-sm text-white mb-1">
@@ -84,11 +134,9 @@ const AddCourse = () => {
               <input
                 type="text"
                 id="title"
-                name="title"
                 placeholder="Write course title"
                 className="px-3 py-2 text-sm text-white bg-transparent border-[1px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6636] focus:ring-offset-2 focus:ring-offset-[#192A41] w-full md:w-[50%]"
-                value={courseTitle}
-                onChange={(e) => setCourseTitle(e.target.value)}
+                {...register("title", { required: true })}
               />
             </div>
           </div>
@@ -97,22 +145,27 @@ const AddCourse = () => {
               Description
             </label>
             <textarea
-              name="description"
               id="description"
               className="px-3 py-2 text-sm text-white bg-transparent border-[1px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6636] focus:ring-offset-2 focus:ring-offset-[#192A41] w-full md:w-[50%] h-20"
-              onChange={(e) => setCourseDescription(e.target.value)}
+              {...register("description", { required: true })}
             />
           </div>
           <div className=" mt-[1rem] mb-[4rem] flex flex-col gap-2">
             <label htmlFor="" className=" text-white text-sm">
               Course lecture note
             </label>
-            <ReactQuill
+            {/* <ReactQuill
               theme="snow"
               formats={["header", "font", "size", "bold", "italic", "color"]}
-              value={value}
-              onChange={setValue}
+              // value={value}
+              // onChange={setValue}
+              
               style={{ color: "#fff", height: "10rem" }}
+            /> */}
+            <textarea
+              id="notes"
+              className="px-3 py-2 text-sm text-white bg-transparent border-[1px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6636] focus:ring-offset-2 focus:ring-offset-[#192A41] w-full  h-40"
+              {...register("notes", { required: true })}
             />
           </div>
 
@@ -151,17 +204,16 @@ const AddCourse = () => {
             </label>
             <input
               type="file"
-              name="thumbnail"
               id="thumbnail"
               accept="image/*"
               className=" hidden"
-              onChange={(e) => setThumbnailFile(e.target.files?.[0])}
+              {...register("thumbnail", { required: true })}
             />
           </div>
 
           <div className="flex gap-5 items-center max-md:flex-col max-md:gap-2">
             <div className=" my-[1rem] w-[25rem] max-md:w-full">
-              <label htmlFor="notes" className=" flex flex-col gap-2">
+              <label htmlFor="video" className=" flex flex-col gap-2">
                 <p className=" text-sm text-white">Course Video</p>
                 <div className=" bg-[#F5F7FA] p-[2rem] text-center">
                   <h3 className=" font-medium">Upload Video</h3>
@@ -176,35 +228,23 @@ const AddCourse = () => {
               </label>
               <input
                 type="file"
-                name="notes"
-                id="notes"
+                id="video"
                 accept="video/*"
                 className=" hidden"
-                onChange={(e) => setVideoFile(e.target.files?.[0])}
+                {...register("video", { required: true })}
               />
             </div>
-
-            {/* <div className=" flex flex-col gap-2 w-[10rem] max-md:w-full">
-              <p className="text-sm text-white">Set Quiz Questions</p>
-              <div
-                className=" bg-[#F5F7FA] p-[2rem] text-center cursor-pointer"
-                onClick={() => setAddQuiz(true)}
-              >
-                <h3 className=" font-medium">Quiz</h3>
-                <p className=" text-[#8C94A3] text-sm">Set Quiz</p>
-              </div>
-            </div> */}
           </div>
 
           <div className=" flex items-center justify-between mt-[1rem]">
             <BtnCancel text="Cancel" />
-            {isCreating || openUploadModal ? (
-              <div className="w-52 mb-5 rounded-lg text-white text-center ">
+            {isCreating ? (
+              <div className="w-52 mb-5 rounded-lg text-white text-center flex flex-col justify-center items-center ">
                 <p className="text-sm z-50 ">Uploading...</p>
                 {/* <div
                   className={`absolute transition-all ease-linear top-0 h-full w-[${totalProgress}%] bg-[#FF6636] rounded-lg`}
                 ></div> */}
-                <progress max={100} value={totalProgress} />
+                <BarLoader color="#fff" />
               </div>
             ) : (
               <BtnSubmit text={signing ? "Signing...." : "Submit for Review"} />
@@ -215,5 +255,11 @@ const AddCourse = () => {
     </div>
   );
 };
+
+function Button({ totalProgress }: { totalProgress: number }) {
+  const { pending } = useFormStatus();
+
+  return;
+}
 
 export default AddCourse;

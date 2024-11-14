@@ -1,12 +1,15 @@
-import CourseDetails from '@/components/CourseDetails'
-import React from 'react'
+import CourseDetails from "@/components/CourseDetails";
+import { getCourseById } from "@/services/apiCourses";
+export const revalidate = 0;
 
-const page = () => {
-	return (
-		<div>
-			<CourseDetails />
-		</div>
-	)
+async function page({ params }: { params: { course: string } }) {
+  const courseId = +params.course;
+  const course = await getCourseById(courseId);
+  return (
+    <div>
+      <CourseDetails course={course} />
+    </div>
+  );
 }
 
-export default page
+export default page;

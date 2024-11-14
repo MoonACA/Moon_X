@@ -7,9 +7,13 @@ import { IoCopy } from "react-icons/io5";
 import React from "react";
 
 import ProfileSettings from "@/components/usertabs/Settings";
+import { User } from "@/services/apiUsers";
+import { useAccount } from "wagmi";
 
-export default function Settings() {
+export default function Settings({ user }: { user: User }) {
   const [copySuccess, setCopySuccess] = useState("");
+
+  const { address } = useAccount();
 
   const handleCopy = () => {
     const textToCopy = "000x1234567890";
@@ -27,12 +31,13 @@ export default function Settings() {
   const renderContent = () => {
     switch (activeTab) {
       case "Settings":
-        return <ProfileSettings />;
+        return <ProfileSettings user={user} />;
 
       default:
         return null;
     }
   };
+  if (!address) throw new Error("Please connect your wallet address");
   return (
     <div className="bg-[#00122C]  py-[10rem] ">
       <div className=" w-[80vw] mx-auto max-sm:w-[90vw]">
