@@ -1,5 +1,3 @@
-"use client";
-
 import Helix from "@/public/assets/Helix.png";
 import sphere from "@/public/assets/sphere.png";
 import star from "@/public/assets/star.png";
@@ -11,12 +9,11 @@ import Ellipse2 from "@/public/assets/Ellipse2.png";
 import Ellipse3 from "@/public/assets/Ellipse3.png";
 import Image from "next/image";
 import Link from "next/link";
-import Card from "./Card";
-import { useCourses } from "@/hooks/course/useCourses";
+import { Suspense } from "react";
+import CourseList from "./CourseList";
+import Loader from "./Loader";
 
 export default function Hero() {
-  const { courses, isLoading, error } = useCourses();
-
   return (
     <section className="relative  bg-[#00122C] md:pb-20 overflow-hidden">
       {/* Ellipse 1 */}
@@ -100,10 +97,9 @@ export default function Hero() {
         </div>
       </div>
       <h1 className="text-[2rem] text-[#fff] font-bold  mb-[2rem]">Courses</h1>
-      <div className=" grid grid-cols-4 mx-auto gap-3 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 ">
-        {courses &&
-          courses.map((course, index) => <Card course={course} key={index} />)}
-      </div>
+      <Suspense fallback={<Loader />}>
+        <CourseList />
+      </Suspense>
     </section>
   );
 }
