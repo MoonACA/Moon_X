@@ -1,13 +1,14 @@
-"use client";
 import AddQuiz from "@/components/AddQuiz";
-import React from "react";
-
-const QuizADD = () => {
+import { getCourseById } from "@/services/apiCourses";
+export const revalidate = 0;
+const page = async ({ params }: { params: { course: string } }) => {
+  const courseId = params.course;
+  const course = await getCourseById(Number(courseId));
   return (
     <div>
-      <AddQuiz />
+      <AddQuiz course={course} />
     </div>
   );
 };
 
-export default QuizADD;
+export default page;

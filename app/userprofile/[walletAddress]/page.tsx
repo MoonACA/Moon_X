@@ -8,7 +8,11 @@ import ProgressStreakTab from "@/components/usertabs/Progress";
 import ProfileCard from "@/components/usertabs/Profilecard";
 import MyCoursesTab from "@/components/usertabs/MyCourses";
 
-export default function UserProfile() {
+export default function UserProfile({
+  params,
+}: {
+  params: { walletAddress: string };
+}) {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -132,7 +136,7 @@ export default function UserProfile() {
                   </div>
                 </div>
                 <div>
-                  <Link href={"/settings"}>
+                  <Link href={`/settings/${params.walletAddress}`}>
                     <button className="py-2 px-2 text-sm md:text-base md:py-3 md:px-3 text-white border border-1 border-white rounded-lg">
                       Edit Profile
                     </button>

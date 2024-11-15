@@ -3,20 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-// interface CourseType {
-//   course: {
-//     id: number;
-//     thumbnail: string;
-//     category: string;
-//     title: string;
-//     description: string;
-//     reward: number;
-//     rating: number;
-//     viewers: number;
-//   };
-//   enroll?: boolean;
-// }
-
 const Card = ({ course }: { course: Course }) => {
   const { id, title, thumbnail, approved, description } = course;
   return (

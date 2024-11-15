@@ -6,4 +6,17 @@ function truncateAddr(walletAddress: string | undefined) {
   return `${firstPart}...${lastPart}`;
 }
 
-export { truncateAddr };
+function fileToBlob(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(new Blob([reader.result || ""], { type: file.type }));
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsArrayBuffer(file);
+  });
+}
+export { truncateAddr, fileToBlob };

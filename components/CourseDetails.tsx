@@ -1,23 +1,14 @@
-"use client";
+import { Course } from "@/services/apiCourses";
 
-import { useParams } from "next/navigation";
-import React from "react";
 import BreadCrumbs from "./BreadCrumbs";
+import CourseBody from "./CourseBody";
 import CourseTop from "./CourseTop";
 import Creators from "./Creators";
-import Rating from "./Rating";
 import GoBack from "./GoBack";
-import { useCourses } from "@/hooks/course/useCourses";
-import DOMPurify from "dompurify";
+import Rating from "./Rating";
 
-const CourseDetails = () => {
-  const { course: courseId } = useParams();
-  const { courses, isLoading, error } = useCourses();
-  const course = courses?.find((data) => data.id == Number(courseId));
-
+const CourseDetails = ({ course }: { course: Course }) => {
   if (!course) return null;
-
-  const safeLecture = DOMPurify.sanitize(course.fullText);
 
   return (
     <div>
@@ -38,18 +29,15 @@ const CourseDetails = () => {
 
         <div className=" relative w-full h-[20rem] my-[1rem]">
           <iframe
-            src={String(course.videoUrl) || ""}
+            src={String(course.video)}
             frameBorder={"0"}
             width={"100%"}
             height={"100%"}
-          ></iframe>
+          />
         </div>
 
         <h2 className=" text-xl text-white font-bold mb-[1rem]">Description</h2>
-        <div
-          className=" text-white text-sm max-md:text-[0.8rem]"
-          dangerouslySetInnerHTML={{ __html: safeLecture }}
-        />
+        <CourseBody courseText={course.fullText} />
       </div>
     </div>
   );

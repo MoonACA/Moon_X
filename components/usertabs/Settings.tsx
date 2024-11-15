@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Avatar from "@mui/material/Avatar";
 import Switch from "@mui/material/Switch";
 import { FiUpload } from "react-icons/fi";
@@ -8,6 +8,8 @@ import { User } from "@/services/apiUsers";
 import { useUpdateUser } from "@/hooks/user/useUpdateUser";
 import Image from "next/image";
 import { useFileReader } from "@/hooks/useFileReader";
+import { updateUserAction } from "@/services/actions";
+import { fileToBlob } from "@/utils/helpers";
 
 interface NotificationSettingProps {
   title: string;
@@ -51,15 +53,16 @@ const NotificationSetting: React.FC<NotificationSettingProps> = ({
   </div>
 );
 
-const ProfileSettings: React.FC = () => {
+const ProfileSettings = ({ user }: { user: User }) => {
   const { address } = useAccount();
-  const { user, isPending, error } = useUser(address);
+
   const [profilePicture, setProfilePicture] = useState<File>();
   const [displayName, setDisplayName] = useState<string>();
   const [bio, setBio] = useState<string>();
   const [displayPic, setDisplayPic] = useState<string>("");
 
-  const { updateUser, isPending: updatingUser } = useUpdateUser();
+  const [updatingUser, startTransistion] = useTransition();
+
   useFileReader(profilePicture, setDisplayPic);
   useEffect(() => {
     if (typeof user?.profilePicture == "string") {
@@ -68,17 +71,20 @@ const ProfileSettings: React.FC = () => {
   }, [user]);
 
   async function handleUpdate() {
-    if (!address) throw new Error("Please connect your waller");
-    const updatedUser: User = {
-      walletAddress: address,
-    };
+    if (!address) throw new Error("Please connect your wallet");
 
-    if (displayName) updatedUser["displayName"] = displayName;
-    if (bio) updatedUser["bio"] = bio;
-    if (profilePicture) updatedUser["profilePicture"] = profilePicture;
+    const formData = new FormData();
+    formData.set("walletAddress", address);
+    if (displayName) formData.set("displayName", displayName);
+    if (bio) formData.set("bio", bio);
+    if (profilePicture)
+      formData.set(
+        "profilePicture",
+        (await fileToBlob(profilePicture)) as Blob,
+        profilePicture.name
+      );
 
-    updateUser({ user: updatedUser, walletAddress: address });
-    console.log({ updatedUser });
+    startTransistion(() => updateUserAction(formData));
   }
 
   return (
