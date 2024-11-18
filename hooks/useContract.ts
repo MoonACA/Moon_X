@@ -1,7 +1,6 @@
 import { useReadContract } from "wagmi";
 import moonXAbi from "../abi/moonx.json";
 import { moonXContractAddress } from "@/services/moonXContract";
-import { useEffect } from "react";
 
 function useContract(functionName: string) {
   const { refetch, data, isError } = useReadContract({

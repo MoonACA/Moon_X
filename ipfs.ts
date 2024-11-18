@@ -57,4 +57,5 @@ export async function uploadToIpfsFile(file: File) {
     throw new Error("Error uploading file to IPFS");
   }
 }
+
 //is the IPFS hash the metadata URI?
