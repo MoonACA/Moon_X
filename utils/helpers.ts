@@ -19,4 +19,8 @@ function fileToBlob(file: File) {
     reader.readAsArrayBuffer(file);
   });
 }
-export { truncateAddr, fileToBlob };
+
+const sleep = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time));
+
+export { truncateAddr, fileToBlob, sleep };

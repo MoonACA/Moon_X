@@ -8,6 +8,7 @@ export interface User {
   profilePicture?: string | File | Blob;
   displayName?: string;
   bio?: string;
+  enrolledCourses?: Array<number>;
 }
 
 const TABLE_NAME = "creators";

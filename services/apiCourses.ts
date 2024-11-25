@@ -81,8 +81,7 @@ export type FilterType = {
   field: string;
   value: boolean;
 };
-const sleep = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time));
+
 async function getCourses(filter?: FilterType): Promise<Course[]> {
   let query = supabase
     .from("courses")

@@ -256,10 +256,4 @@ const AddCourse = () => {
   );
 };
 
-function Button({ totalProgress }: { totalProgress: number }) {
-  const { pending } = useFormStatus();
-
-  return;
-}
-
 export default AddCourse;

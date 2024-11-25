@@ -9,7 +9,12 @@ import {
   updateCourse,
 } from "./apiCourses";
 import { createQuiz, Quiz } from "./apiQuiz";
-import { createGetUser, updateUser, User } from "./apiUsers";
+import {
+  createGetUser,
+  getUserByWalletAddress,
+  updateUser,
+  User,
+} from "./apiUsers";
 import supabase from "./supabase";
 import { s3UploadFile } from "./s3Uploads";
 
@@ -119,6 +124,34 @@ async function createQuizAction(
   revalidatePath(`/courses/${courseId}/add-quiz`);
 }
 
+// ENROLL
+
+async function getEnrolledCoursesAction(creator: string) {
+  const { user, error } = await getUserByWalletAddress(creator);
+
+  if (error) throw new Error(error.message);
+
+  return user.enrolledCourses;
+}
+
+async function updateEnrollCoursesAction(creator: string, courseId: string) {
+  const { user, error } = await getUserByWalletAddress(creator);
+
+  if (error) throw new Error(error.message);
+
+  const enroll = user.enrolledCourses ? user.enrolledCourses : [];
+  if (!enroll.includes(Number(courseId))) {
+    await supabase
+      .from("creators")
+      .update({
+        enrolledCourses: [...enroll, Number(courseId)],
+      })
+      .eq("walletAddress", creator);
+
+    revalidatePath("/courses");
+  }
+}
+
 export {
   createCourseAction,
   updateCourseAction,
@@ -126,4 +159,6 @@ export {
   createQuizAction,
   createGetUserAction,
   updateUserAction,
+  getEnrolledCoursesAction,
+  updateEnrollCoursesAction,
 };
