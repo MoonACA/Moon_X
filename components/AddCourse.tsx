@@ -3,13 +3,12 @@ import { useContract } from "@/hooks/useContract";
 import { useFileReader } from "@/hooks/useFileReader";
 import { createCourseAction, deleteCourseAction } from "@/services/actions";
 import { Course } from "@/services/apiCourses";
-import { uploadToIpfs } from "@/services/ipfs";
+import { uploadToIpfs } from "@/services/ipfsAction";
 import { writeToContract } from "@/services/moonXContract";
 import { fileToBlob } from "@/utils/helpers";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineFileUpload } from "react-icons/md";
@@ -113,7 +112,7 @@ const AddCourse = () => {
   };
 
   async function writeCourseToContract(createdCourse: Course) {
-    const ipfsHash = await uploadToIpfs(createdCourse);
+    const ipfsHash = await uploadToIpfs(String(createdCourse));
     const uri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
     writeToContract(writeContract, {
       args: [uri],
