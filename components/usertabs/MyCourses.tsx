@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import CourseDialog from "./ModelBox";
+import { Course } from "@/services/apiCourses";
 
 type CardProps = {
   image: string;
@@ -62,7 +63,7 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
-const MyCoursesTab: React.FC = () => {
+const MyCoursesTab = ({ myCourses }: { myCourses: Course[] }) => {
   const courses = [
     {
       image: "/assets/moonxImg1.png",
@@ -75,14 +76,14 @@ const MyCoursesTab: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 p-[1rem]">
-      {courses.map((course, index) => (
+      {myCourses.map((course, index) => (
         <Card
           key={index}
-          image={course.image}
+          image={String(course.thumbnail)}
           category={course.category}
           title={course.title}
-          registeredUsers={course.registeredUsers}
-          buttonLabel={course.buttonLabel}
+          registeredUsers={"100"}
+          buttonLabel={"Edit"}
         />
       ))}
     </div>

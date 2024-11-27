@@ -41,18 +41,16 @@ async function createGetUser(newUser: User): Promise<User> {
 
 async function updateUser(newUser: User) {
   let ppPath;
-  let hasBaseUrl = false;
+  let hasBaseUrl = String(newUser.profilePicture).startsWith(supabaseUrl);
   let ppName;
-  if (newUser.profilePicture instanceof File) {
-    ppName = `${Math.random()}-${newUser.profilePicture.name
+  if (!hasBaseUrl) {
+    const pp = newUser.profilePicture as File;
+    ppName = `${Math.random()}-${pp.name
       .replaceAll("/", "")
       .replaceAll(" ", "")}`;
     ppPath = `${supabaseUrl}/storage/v1/object/public/profilePictures/${ppName}`;
-  }
-
-  if (newUser.profilePicture instanceof String) {
+  } else {
     ppPath = newUser.profilePicture;
-    hasBaseUrl = true;
   }
 
   const { data: user, error } = await supabase

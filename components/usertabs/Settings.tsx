@@ -2,10 +2,8 @@ import React, { useEffect, useState, useTransition } from "react";
 import Avatar from "@mui/material/Avatar";
 import Switch from "@mui/material/Switch";
 import { FiUpload } from "react-icons/fi";
-import { useUser } from "@/hooks/user/useUser";
 import { useAccount } from "wagmi";
 import { User } from "@/services/apiUsers";
-import { useUpdateUser } from "@/hooks/user/useUpdateUser";
 import Image from "next/image";
 import { useFileReader } from "@/hooks/useFileReader";
 import { updateUserAction } from "@/services/actions";
@@ -75,14 +73,16 @@ const ProfileSettings = ({ user }: { user: User }) => {
 
     const formData = new FormData();
     formData.set("walletAddress", address);
-    if (displayName) formData.set("displayName", displayName);
-    if (bio) formData.set("bio", bio);
-    if (profilePicture)
-      formData.set(
-        "profilePicture",
-        (await fileToBlob(profilePicture)) as Blob,
-        profilePicture.name
-      );
+    formData.set("displayName", displayName || String(user.displayName));
+    formData.set("bio", bio || String(user?.bio));
+
+    profilePicture
+      ? formData.set(
+          "profilePicture",
+          (await fileToBlob(profilePicture)) as Blob,
+          profilePicture.name
+        )
+      : formData.set("profilePicture", displayPic);
 
     startTransistion(() => updateUserAction(formData));
   }

@@ -2,8 +2,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import CourseDialog from "./ModelBox";
+import { Course } from "@/services/apiCourses";
+import { useRouter } from "next/navigation";
 
 type CardProps = {
+  id: number;
   image: string;
   category: string;
   title: string;
@@ -12,6 +15,7 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({
+  id,
   image,
   category,
   title,
@@ -19,9 +23,9 @@ const Card: React.FC<CardProps> = ({
   buttonLabel,
 }) => {
   const [open, setOpen] = useState(false);
-
+  const router = useRouter();
   const handleClickOpen = () => {
-    setOpen(true);
+    router.push(`/courses/${id}`);
   };
 
   const handleClose = () => {
@@ -62,7 +66,11 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
-const ProgressStreakTab: React.FC = () => {
+const ProgressStreakTab = ({
+  enrolledCourses,
+}: {
+  enrolledCourses: Course[];
+}) => {
   const courses = [
     {
       image: "/assets/moonxImg1.png",
@@ -75,14 +83,15 @@ const ProgressStreakTab: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 p-[1rem]">
-      {courses.map((course, index) => (
+      {enrolledCourses.map((course, index) => (
         <Card
           key={index}
-          image={course.image}
+          id={course.id}
+          image={String(course.thumbnail)}
           category={course.category}
           title={course.title}
-          reward={course.reward}
-          buttonLabel={course.buttonLabel}
+          reward={"50 mand"}
+          buttonLabel={"Watch course"}
         />
       ))}
     </div>

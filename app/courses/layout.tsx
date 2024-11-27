@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className=" bg-[#00122C]">
+      <body className="bg-[#00122C]">
         <SideBar />
         <UserNav />
         <div className=" py-[5rem] w-[80vw] mx-auto max-sm:w-[90vw]">

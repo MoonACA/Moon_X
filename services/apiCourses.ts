@@ -114,6 +114,20 @@ async function getCourseById(id: number): Promise<Course> {
   return course;
 }
 
+async function getCoursesByIds(ids: number[] | undefined): Promise<Course[]> {
+  if (!ids) return [];
+  const { data: courses, error } = await supabase
+    .from("courses")
+    .select("*")
+    .in("id", [ids]);
+
+  if (error) {
+    throw new Error(`Error fetching courses: ${error.message}`);
+  }
+
+  return courses;
+}
+
 async function getUserCourses(walletAddress: string): Promise<Course[]> {
   const { data: courses, error } = await supabase
     .from("courses")
@@ -143,4 +157,12 @@ async function updateCourse(id: number, updates: {}) {
   }
 }
 
-export { createCourse, getCourses, getCourseById, deleteCourse, updateCourse };
+export {
+  createCourse,
+  getCourses,
+  getCourseById,
+  getCoursesByIds,
+  getUserCourses,
+  deleteCourse,
+  updateCourse,
+};

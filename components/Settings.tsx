@@ -9,6 +9,7 @@ import React from "react";
 import ProfileSettings from "@/components/usertabs/Settings";
 import { User } from "@/services/apiUsers";
 import { useAccount } from "wagmi";
+import { truncateAddr } from "@/utils/helpers";
 
 export default function Settings({ user }: { user: User }) {
   const [copySuccess, setCopySuccess] = useState("");
@@ -16,7 +17,7 @@ export default function Settings({ user }: { user: User }) {
   const { address } = useAccount();
 
   const handleCopy = () => {
-    const textToCopy = "000x1234567890";
+    const textToCopy = user.walletAddress;
     navigator.clipboard.writeText(textToCopy).then(
       () => {
         setCopySuccess("Copied!");
@@ -48,8 +49,10 @@ export default function Settings({ user }: { user: User }) {
             <div className="flex items-center justify-between mb-3 sm:mb-5 ">
               <div className="flex gap-4">
                 <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
+                  alt={user.displayName || ""}
+                  src={
+                    String(user.profilePicture) || "/static/images/avatar/1.jpg"
+                  }
                   sx={{
                     width: { xs: 40, sm: 56 }, // 40px width for mobile, 56px for larger screens
                     height: { xs: 40, sm: 56 }, // 40px height for mobile, 56px for larger screens
@@ -57,15 +60,18 @@ export default function Settings({ user }: { user: User }) {
                   }}
                 />
                 <div className="mt-1">
-                  <p className="text-white text-sm md:text-lg">{"name"}</p>
-                  <p className="text-white md:text-sm text-xs gap-2">
-                    {1910}{" "}
+                  <p className="text-white text-sm md:text-lg">
+                    {user.fullName ||
+                      user.displayName ||
+                      truncateAddr(user.walletAddress)}
+                  </p>
+                  <p className="text-white md:text-sm text-xs gap-2 flex items-center">
+                    <span> {truncateAddr(user.walletAddress)} </span>
                     <span
                       className="inline-flex mr-1"
                       onClick={handleCopy}
                       style={{ cursor: "pointer" }}
                     >
-                      {" "}
                       <IoCopy
                         style={{
                           color: "transparent", // Makes the inside of the icon transparent

@@ -149,6 +149,7 @@ async function updateEnrollCoursesAction(creator: string, courseId: string) {
       .eq("walletAddress", creator);
 
     revalidatePath("/courses");
+    revalidatePath(`/userprofile/${creator}`);
   }
 }
 
