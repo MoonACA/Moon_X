@@ -25,7 +25,7 @@ export async function uploadToIpfs(data: string) {
       body: data,
     });
     const resData = await res.json();
-    console.log(resData.IpfsHash);
+
     return resData.IpfsHash;
   } catch (error) {
     console.log("Error adding file to IPFS", error);

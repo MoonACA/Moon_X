@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.691.0",
-    "@aws-sdk/lib-storage": "^3.691.0",
+    "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/lib-storage": "^3.701.0",
+    "@aws-sdk/util-stream": "^3.374.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.6",
@@ -28,7 +29,6 @@
     "@uppy/progress-bar": "^4.0.0",
     "@uppy/react": "^4.0.2",
     "@uppy/tus": "^4.1.2",
-    "buffer": "^6.0.3",
     "dompurify": "^3.1.7",
     "ethers": "^6.13.4",
     "next": "14.2.5",
@@ -44,7 +44,6 @@
     "react-spinners": "^0.14.1",
     "react-star-ratings": "^2.3.0",
     "react-toastify": "^10.0.6",
-    "stream-browserify": "^3.0.0",
     "util": "^0.12.5",
     "uuid": "^11.0.3",
     "viem": "^2.21.3",
@@ -52,8 +51,6 @@
     "web3": "^4.12.1"
   },
   "devDependencies": {
-    "@smithy/util-stream": "^2.0.0",
-    "@smithy/util-utf8": "^2.0.0",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -64,10 +61,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  },
-  "resolutions": {
-    "@smithy/util-stream": "^2.0.0",
-    "@smithy/util-utf8": "^2.0.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

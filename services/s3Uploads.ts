@@ -1,5 +1,6 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import { Buffer } from "buffer";
 import { Readable } from "stream";
 
 const s3Client = new S3Client({
@@ -17,6 +18,9 @@ const s3Client = new S3Client({
 
 async function s3UploadFile(file: File, fileName: string) {
   const fileStream = convertWebStreamToNodeStream(file.stream());
+
+  const arrayBuffer = await file.arrayBuffer();
+  const fileBuffer = Buffer.from(arrayBuffer);
 
   const upload = new Upload({
     client: s3Client,

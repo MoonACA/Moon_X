@@ -16,6 +16,7 @@ import {
   User,
 } from "./apiUsers";
 import supabase from "./supabase";
+import { s3MiniUploadFile } from "./s3UploadsMini";
 import { s3UploadFile } from "./s3Uploads";
 
 // USER
@@ -57,8 +58,6 @@ async function createCourseAction(formData: FormData, videoName: string) {
 
   const creator = data.creatorAddress;
 
-  console.log(data);
-
   const newUser: User = {
     walletAddress: creator,
   };
@@ -73,7 +72,15 @@ async function createCourseAction(formData: FormData, videoName: string) {
     await supabase.from(TABLE_NAME).insert([{ newUser }]).select().single();
   }
 
-  await s3UploadFile(data.video, videoName);
+  const { error } = await supabase.storage
+    .from(process.env.SUPABASE_BUCKET_ID || "")
+    .upload(videoName, data.video, {
+      cacheControl: "3600",
+    });
+
+  if (error) {
+    throw new Error(`Upload failed: ${error.message}`);
+  }
 
   const course = await createCourse(data, videoName);
 

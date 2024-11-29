@@ -112,13 +112,21 @@ const AddCourse = () => {
   };
 
   async function writeCourseToContract(createdCourse: Course) {
-    const ipfsHash = await uploadToIpfs(String(createdCourse));
-    const uri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
-    writeToContract(writeContract, {
-      args: [uri],
-      functionName: "createCourse",
-      value: "0.75",
-    });
+    try {
+      const ipfsHash = await uploadToIpfs(JSON.stringify(createdCourse));
+      const uri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
+      writeToContract(writeContract, {
+        args: [uri],
+        functionName: "createCourse",
+        value: "0.75",
+      });
+    } catch (error) {
+      await deleteCourseAction(
+        String(createdCourse.id),
+        createdCourse.creatorAddress
+      );
+      setSigning(false);
+    }
   }
 
   return (
