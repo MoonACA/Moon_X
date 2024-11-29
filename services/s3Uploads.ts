@@ -21,18 +21,19 @@ async function s3UploadFile(file: File, fileName: string) {
 
   const arrayBuffer = await file.arrayBuffer();
   const fileBuffer = Buffer.from(arrayBuffer);
-
+  console.log("Uploading with aws...");
   const upload = new Upload({
     client: s3Client,
     params: {
       Bucket: process.env.SUPABASE_BUCKET_ID,
       Key: fileName,
       ContentType: file.type,
-      Body: fileStream,
+      Body: fileBuffer,
     },
   });
 
   await upload.done();
+  console.log("Upload done.");
 }
 
 export { s3UploadFile };

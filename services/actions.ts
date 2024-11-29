@@ -72,16 +72,17 @@ async function createCourseAction(formData: FormData, videoName: string) {
     await supabase.from(TABLE_NAME).insert([{ newUser }]).select().single();
   }
 
-  const { error } = await supabase.storage
-    .from(process.env.SUPABASE_BUCKET_ID || "")
-    .upload(videoName, data.video, {
-      cacheControl: "3600",
-    });
+  // const { error } = await supabase.storage
+  //   .from(process.env.SUPABASE_BUCKET_ID || "")
+  //   .upload(videoName, data.video, {
+  //     cacheControl: "3600",
+  //   });
 
-  if (error) {
-    throw new Error(`Upload failed: ${error.message}`);
-  }
+  // if (error) {
+  //   throw new Error(`Upload failed: ${error.message}`);
+  // }
 
+  await s3UploadFile(data.video, videoName);
   const course = await createCourse(data, videoName);
 
   revalidatePath("/courses");

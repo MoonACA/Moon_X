@@ -17,6 +17,7 @@ import { BarLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { useAccount, useWriteContract } from "wagmi";
 import { BtnCancel, BtnSubmit } from "./Btn";
+import { s3UploadFile } from "@/services/s3Uploads";
 
 type InputType = {
   title: string;
